@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumTrader | AI Stock Market Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        :root {
+            --quantum-blue: #0a0a2a;
+            --neon-teal: #00ffcc;
+            --neon-purple: #cc00ff;
+            --text-glow: 0 0 10px var(--neon-teal);
+            --card-width: 180px;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--quantum-blue);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100%;
+        }
+        
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--neon-teal);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-teal);
+            text-shadow: var(--text-glow);
+            letter-spacing: 2px;
+        }
+        
+        .profile-btn {
+            background: rgba(10, 10, 42, 0.7);
+            border: 1px solid var(--neon-teal);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-btn:hover {
+            background: var(--neon-teal);
+            color: var(--quantum-blue);
+            text-shadow: none;
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        /* Market Overview Section */
+        .market-overview {
+            padding: 1rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-teal);
+            margin: 1rem 0;
+            text-shadow: var(--text-glow);
+            font-size: 1.5rem;
+        }
+        
+        /* Manual Horizontal Scroller */
+        .scroller {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            cursor: grab;
+        }
+        
+        .scroller-inner {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0 2rem;
+            height: 100%;
+        }
+        
+        .scroller::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .scroller::-webkit-scrollbar-track {
+            background: rgba(0, 255, 204, 0.1);
+        }
+        
+        .scroller::-webkit-scrollbar-thumb {
+            background: var(--neon-teal);
+            border-radius: 4px;
+        }
+        
+        /* Stock Card - Placeholder for 3D Models */
+        .stock-card {
+            flex: 0 0 var(--card-width);
+            height: 220px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-teal);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            scroll-snap-align: center;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 0 25px var(--neon-teal);
+        }
+        
+        .stock-logo-3d {
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 255, 204, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            border: 1px solid var(--neon-teal);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+        }
+        
+        .stock-name {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-align: center;
+        }
+        
+        .stock-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+        }
+        
+        .price-up {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        
+        .price-down {
+            color: #ff0066;
+            text-shadow: 0 0 10px #ff0066;
+        }
+        
+        /* AI Analysis Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: var(--quantum-blue);
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 800px;
+            border: 1px solid var(--neon-purple);
+            box-shadow: 0 0 30px var(--neon-purple);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .company-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-logo {
+            width: 80px;
+            height: 80px;
+            margin-right: 1.5rem;
+        }
+        
+        .company-info h2 {
+            margin: 0;
+            color: var(--neon-teal);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .current-price {
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
+        
+        .ai-analysis {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--neon-purple);
+        }
+        
+        .ai-title {
+            color: var(--neon-purple);
+            font-family: 'Orbitron', sans-serif;
+            margin-top: 0;
+        }
+        
+        .buy-recommendation {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            border-top: 1px solid var(--neon-teal);
+            border-bottom: 1px solid var(--neon-teal);
+        }
+        
+        .buy-question {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        
+        .buy-answer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .buy-yes {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .buy-no {
+            background: rgba(255, 0, 102, 0.2);
+            color: #ff0066;
+            border: 1px solid #ff0066;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+        }
+        
+        /* Grid Background */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Data Connection Status */
+        .connection-status {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--neon-teal);
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+        }
+        
+        .connected {
+            color: #00ff88;
+            text-shadow: 0 0 5px #00ff88;
+        }
+        
+        .disconnected {
+            color: #ff0066;
+            text-shadow: 0 0 5px #ff0066;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-overlay"></div>
+    <div class="container">
+        <header class="header">
+            <div class="logo">QUANTUMTRADER</div>
+            <button class="profile-btn">PROFILE</button>
+        </header>
+        
+        <main class="market-overview">
+            <h2 class="section-title">MARKET OVERVIEW</h2>
+            
+            <!-- Manual Horizontal Scroller -->
+            <div class="scroller">
+                <div class="scroller-inner">
+                    <div class="stock-card" onclick="openModal('AAPL')">
+                        <div class="stock-logo-3d">AAPL</div>
+                        <h3 class="stock-name">APPLE</h3>
+                        <div class="stock-price price-up">$189.32 (+2.4%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('MSFT')">
+                        <div class="stock-logo-3d">MSFT</div>
+                        <h3 class="stock-name">MICROSOFT</h3>
+                        <div class="stock-price price-up">$420.45 (+0.8%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('GOOGL')">
+                        <div class="stock-logo-3d">GOOGL</div>
+                        <h3 class="stock-name">ALPHABET</h3>
+                        <div class="stock-price price-down">$156.32 (-0.4%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('AMZN')">
+                        <div class="stock-logo-3d">AMZN</div>
+                        <h3 class="stock-name">AMAZON</h3>
+                        <div class="stock-price price-up">$180.75 (+1.3%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('TSLA')">
+                        <div class="stock-logo-3d">TSLA</div>
+                        <h3 class="stock-name">TESLA</h3>
+                        <div class="stock-price price-down">$172.63 (-1.2%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('NVDA')">
+                        <div class="stock-logo-3d">NVDA</div>
+                        <h3 class="stock-name">NVIDIA</h3>
+                        <div class="stock-price price-up">$903.56 (+5.7%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('META')">
+                        <div class="stock-logo-3d">META</div>
+                        <h3 class="stock-name">META</h3>
+                        <div class="stock-price price-up">$485.39 (+3.1%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('JPM')">
+                        <div class="stock-logo-3d">JPM</div>
+                        <h3 class="stock-name">JPMORGAN</h3>
+                        <div class="stock-price price-down">$198.22 (-0.7%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('BAC')">
+                        <div class="stock-logo-3d">BAC</div>
+                        <h3 class="stock-name">BANK OF AMERICA</h3>
+                        <div class="stock-price price-up">$33.45 (+0.9%)</div>
+                    </div>
+                    <div class="stock-card" onclick="openModal('DIS')">
+                        <div class="stock-logo-3d">DIS</div>
+                        <h3 class="stock-name">DISNEY</h3>
+                        <div class="stock-price price-down">$92.18 (-1.5%)</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- AI Analysis Modal -->
+    <div id="analysisModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            
+            <div class="company-header">
+                <div class="modal-logo" id="modalLogo"></div>
+                <div class="company-info">
+                    <h2 id="companyName">COMPANY NAME</h2>
+                    <div class="current-price" id="currentPrice">$0.00 (0.00%)</div>
+                </div>
+            </div>
+            
+            <div class="ai-analysis">
+                <h3 class="ai-title">QUANTUM AI ANALYSIS</h3>
+                <p id="aiSummary">Loading quantum analysis... Our AI is currently evaluating market trends, recent news, technical indicators, and fundamental data to provide you with the most accurate assessment.</p>
+                
+                <h4>KEY METRICS</h4>
+                <ul id="keyMetrics">
+                    <li>52-Week Range: $XXX - $XXX</li>
+                    <li>P/E Ratio: XX.XX</li>
+                    <li>Market Cap: $XXX Billion</li>
+                    <li>Volume: X.XM</li>
+                </ul>
+                
+                <h4>RECENT NEWS SENTIMENT</h4>
+                <p id="newsSentiment">Analyzing latest headlines...</p>
+                
+                <h4>REAL-TIME DATA STATUS</h4>
+                <p id="dataStatus">Connecting to market data API...</p>
+            </div>
+            
+            <div class="buy-recommendation">
+                <div class="buy-question">SHOULD I BUY THIS STOCK?</div>
+                <div class="buy-answer" id="buyRecommendation">QUANTUM AI PROCESSING...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="connectionStatus" class="connection-status disconnected">
+        DATA: DISCONNECTED
+    </div>
+    
+    <script>
+        // Sample data for demonstration
+        const stockData = {
+            'AAPL': {
+                name: 'APPLE INC',
+                price: '$189.32 (+2.4%)',
+                analysis: 'Apple shows strong momentum with upcoming product releases and consistent earnings growth. Institutional ownership has increased by 3% last quarter. Technical indicators show bullish crossover on daily charts.',
+                metrics: [
+                    '52-Week Range: $142.53 - $198.23',
+                    'P/E Ratio: 28.76',
+                    'Market Cap: $2.91 Trillion',
+                    'Volume: 58.3M'
+                ],
+                news: 'Positive sentiment (82%) - New AI features announced for iOS 18, Morgan Stanley raises price target',
+                recommendation: 'buy-yes',
+                recommendationText: 'STRONG BUY',
+                dataStatus: 'Live data connected (15 sec refresh)'
+            },
+            'MSFT': {
+                name: 'MICROSOFT CORP',
+                price: '$420.45 (+0.8%)',
+                analysis: 'Microsoft continues to dominate cloud computing with Azure growth accelerating. AI integration across product suite driving new revenue streams. Recent government contracts provide stable cash flow.',
+                metrics: [
+                    '52-Week Range: $309.45 - $430.82',
+                    'P/E Ratio: 36.54',
+                    'Market Cap: $3.12 Trillion',
+                    'Volume: 22.7M'
+                ],
+                news: 'Neutral sentiment (65%) - Wins $1.2B Pentagon contract, FTC investigating AI partnerships',
+                recommendation: 'buy-yes',
+                recommendationText: 'BUY',
+                dataStatus: 'Live data connected (15 sec refresh)'
+            },
+            'TSLA': {
+                name: 'TESLA INC',
+                price: '$172.63 (-1.2%)',
+                analysis: 'Tesla faces mixed signals with delivery numbers below estimates but energy storage business growing rapidly. Elon Musk\'s divided attention between companies remains a concern for investors.',
+                metrics: [
+                    '52-Week Range: $152.37 - $299.29',
+                    'P/E Ratio: 42.15',
+                    'Market Cap: $550.24 Billion',
+                    'Volume: 112.5M'
+                ],
+                news: 'Negative sentiment (43%) - Cybertruck recall announced, Berlin factory protests continue',
+                recommendation: 'buy-no',
+                recommendationText: 'HOLD',
+                dataStatus: 'Live data connected (15 sec refresh)'
+            }
+        };
+        
+        // Simulate real-time connection
+        function simulateRealTimeConnection() {
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.textContent = "DATA: CONNECTED (Alpha Vantage API)";
+            statusElement.classList.remove('disconnected');
+            statusElement.classList.add('connected');
+            
+            // Simulate periodic updates
+            setInterval(() => {
+                const prices = document.querySelectorAll('.stock-price');
+                prices.forEach(priceEl => {
+                    const randomChange = (Math.random() * 3 - 1.5).toFixed(2);
+                    const currentValue = parseFloat(priceEl.textContent.match(/\d+\.\d+/)[0]);
+                    const newValue = (currentValue * (1 + randomChange/100)).toFixed(2);
+                    
+                    if (randomChange > 0) {
+                        priceEl.innerHTML = `$${newValue} <span class="price-up">(+${Math.abs(randomChange)}%)</span>`;
+                    } else {
+                        priceEl.innerHTML = `$${newValue} <span class="price-down">(${randomChange}%)</span>`;
+                    }
+                });
+            }, 15000); // Update every 15 seconds
+        }
+        
+        function openModal(ticker) {
+            const modal = document.getElementById('analysisModal');
+            const data = stockData[ticker] || stockData['AAPL']; // Default to AAPL if not found
+            
+            // Update modal content
+            document.getElementById('modalLogo').textContent = ticker;
+            document.getElementById('companyName').textContent = data.name;
+            document.getElementById('currentPrice').textContent = data.price;
+            document.getElementById('aiSummary').textContent = data.analysis;
+            
+            // Update key metrics
+            const metricsList = document.getElementById('keyMetrics');
+            metricsList.innerHTML = data.metrics.map(item => `<li>${item}</li>`).join('');
+            
+            document.getElementById('newsSentiment').textContent = data.news;
+            document.getElementById('dataStatus').textContent = data.dataStatus;
+            
+            // Update recommendation
+            const recommendation = document.getElementById('buyRecommendation');
+            recommendation.className = 'buy-answer ' + data.recommendation;
+            recommendation.textContent = data.recommendationText;
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('analysisModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside content
+        window.onclick = function(event) {
+            const modal = document.getElementById('analysisModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            simulateRealTimeConnection();
+        });
+    </script>
+</body>
+</html>
