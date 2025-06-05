@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumTrader | Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        :root {
+            --quantum-blue: #0a0a2a;
+            --neon-teal: #00ffcc;
+            --neon-purple: #cc00ff;
+            --text-glow: 0 0 10px var(--neon-teal);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--quantum-blue);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--neon-teal);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-teal);
+            text-shadow: var(--text-glow);
+            letter-spacing: 2px;
+        }
+        
+        .logout-btn {
+            background: rgba(10, 10, 42, 0.7);
+            border: 1px solid var(--neon-teal);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--neon-teal);
+            color: var(--quantum-blue);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--neon-teal);
+            object-fit: cover;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-teal);
+        }
+        
+        .profile-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-email {
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+        
+        .change-pic-btn {
+            background: transparent;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .change-pic-btn:hover {
+            background: var(--neon-purple);
+            color: white;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-teal);
+            border-bottom: 1px solid var(--neon-teal);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .portfolio-section, .watched-stocks {
+            margin-bottom: 3rem;
+        }
+        
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stock-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-teal);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--neon-teal);
+        }
+        
+        .stock-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-price {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .price-up {
+            color: #00ff88;
+        }
+        
+        .price-down {
+            color: #ff0066;
+        }
+        
+        .add-stock-btn {
+            background: var(--neon-teal);
+            color: var(--quantum-blue);
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .connect-brokerage {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed var(--neon-teal);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="profile-header">
+        <div class="logo">QUANTUMTRADER</div>
+        <button class="logout-btn" id="logoutBtn">LOGOUT</button>
+    </header>
+    
+    <div class="profile-container">
+        <div class="profile-info">
+            <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-pic" id="profilePic">
+            <h2 class="profile-name" id="profileName">Username</h2>
+            <p class="profile-email" id="profileEmail">user@example.com</p>
+            <button class="change-pic-btn" id="changePicBtn">Change Profile Picture</button>
+        </div>
+        
+        <div class="portfolio-section">
+            <h3 class="section-title">MY PORTFOLIO</h3>
+            <div class="stock-grid" id="portfolioGrid">
+                <!-- Portfolio stocks will be added here -->
+            </div>
+            <div class="connect-brokerage" id="connectBrokerage">
+                + Connect Your Brokerage Account
+            </div>
+        </div>
+        
+        <div class="watched-stocks">
+            <h3 class="section-title">WATCHED STOCKS</h3>
+            <div class="stock-grid" id="watchedStocksGrid">
+                <!-- Watched stocks will be added here -->
+            </div>
+            <button class="add-stock-btn" id="addStockBtn">+ Add Stock to Watchlist</button>
+        </div>
+    </div>
+
+    <script>
+        // Load user data
+        const userData = JSON.parse(localStorage.getItem('quantumUser'));
+        
+        if (!userData) {
+            window.location.href = 'login.html';
+        }
+        
+        // Display user info
+        document.getElementById('profileName').textContent = userData.username;
+        document.getElementById('profileEmail').textContent = userData.email;
+        
+        if (userData.profilePic) {
+            document.getElementById('profilePic').src = userData.profilePic;
+        }
+        
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('quantumUser');
+            window.location.href = 'login.html';
+        });
+        
+        // Change profile picture
+        document.getElementById('changePicBtn').addEventListener('click', function() {
+            const picUrl = prompt('Enter URL for your profile picture:');
+            if (picUrl) {
+                document.getElementById('profilePic').src = picUrl;
+                userData.profilePic = picUrl;
+                localStorage.setItem('quantumUser', JSON.stringify(userData));
+            }
+        });
+        
+        // Connect brokerage
+        document.getElementById('connectBrokerage').addEventListener('click', function() {
+            alert('In a full implementation, this would connect to brokerage APIs like Robinhood, TD Ameritrade, etc.');
+        });
+        
+        // Add stock to watchlist
+        document.getElementById('addStockBtn').addEventListener('click', function() {
+            const stockSymbol = prompt('Enter stock symbol to add (e.g., AAPL):');
+            if (stockSymbol) {
+                if (!userData.watchedStocks) userData.watchedStocks = [];
+                if (!userData.watchedStocks.includes(stockSymbol)) {
+                    userData.watchedStocks.push(stockSymbol);
+                    localStorage.setItem('quantumUser', JSON.stringify(userData));
+                    loadWatchedStocks();
+                }
+            }
+        });
+        
+        // Load watched stocks
+        function loadWatchedStocks() {
+            const watchedStocksGrid = document.getElementById('watchedStocksGrid');
+            watchedStocksGrid.innerHTML = '';
+            
+            if (userData.watchedStocks && userData.watchedStocks.length > 0) {
+                userData.watchedStocks.forEach(stock => {
+                    fetchStockData(stock, watchedStocksGrid);
+                });
+            } else {
+                watchedStocksGrid.innerHTML = '<p>No stocks in watchlist yet.</p>';
+            }
+        }
+        
+        // Load portfolio stocks
+        function loadPortfolio() {
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            portfolioGrid.innerHTML = '';
+            
+            if (userData.portfolio && Object.keys(userData.portfolio).length > 0) {
+                Object.keys(userData.portfolio).forEach(stock => {
+                    fetchStockData(stock, portfolioGrid, userData.portfolio[stock]);
+                });
+            } else {
+                portfolioGrid.innerHTML = '<p>No stocks in portfolio yet.</p>';
+            }
+        }
+        
+        // Fetch stock data from Finnhub
+        function fetchStockData(symbol, container, portfolioData = null) {
+            fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=d0uelbpr01qn5fk4u25gd0uelbpr01qn5fk4u260`)
+                .then(response => response.json())
+                .then(data => {
+                    const stockCard = document.createElement('div');
+                    stockCard.className = 'stock-card';
+                    
+                    const change = data.c - data.pc;
+                    const percentChange = (change / data.pc * 100).toFixed(2);
+                    const changeClass = change >= 0 ? 'price-up' : 'price-down';
+                    const changeSymbol = change >= 0 ? '+' : '';
+                    
+                    let stockInfo = `
+                        <div class="stock-name">${symbol}</div>
+                        <div class="stock-price">$${data.c.toFixed(2)}</div>
+                        <div class="${changeClass}">${changeSymbol}${percentChange}%</div>
+                    `;
+                    
+                    if (portfolioData) {
+                        const investmentValue = portfolioData.shares * data.c;
+                        const profit = investmentValue - portfolioData.invested;
+                        const profitClass = profit >= 0 ? 'price-up' : 'price-down';
+                        const profitSymbol = profit >= 0 ? '+' : '';
+                        
+                        stockInfo += `
+                            <hr>
+                            <div>Shares: ${portfolioData.shares}</div>
+                            <div>Invested: $${portfolioData.invested.toFixed(2)}</div>
+                            <div>Value: $${investmentValue.toFixed(2)}</div>
+                            <div class="${profitClass}">${profitSymbol}$${Math.abs(profit).toFixed(2)} (${profitSymbol}${(profit/portfolioData.invested*100).toFixed(2)}%)</div>
+                        `;
+                    }
+                    
+                    stockCard.innerHTML = stockInfo;
+                    container.appendChild(stockCard);
+                })
+                .catch(error => {
+                    console.error('Error fetching stock data:', error);
+                });
+        }
+        
+        // Initial load
+        loadWatchedStocks();
+        loadPortfolio();
+    </script>
+</body>
+</html>
