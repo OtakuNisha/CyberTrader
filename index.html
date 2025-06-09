@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumTrader | AI Stock Market</title>
+    <title>CyberTrader | AI Stock Market</title>
     <!-- Add Socket.io client -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <!-- Three.js for 3D rendering -->
@@ -18,7 +18,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
         
         :root {
-            --quantum-blue: #0a0a2a;
+            --Cyber-blue: #0a0a2a;
             --neon-teal: #00ffcc;
             --neon-purple: #cc00ff;
             --text-glow: 0 0 10px var(--neon-teal);
@@ -32,7 +32,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--quantum-blue);
+            background-color: var(--Cyber-blue);
             color: white;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
@@ -86,7 +86,7 @@
         
         .profile-btn:hover {
             background: var(--neon-teal);
-            color: var(--quantum-blue);
+            color: var(--Cyber-blue);
             text-shadow: none;
             box-shadow: 0 0 15px var(--neon-teal);
         }
@@ -137,7 +137,7 @@
         
         .scroll-arrow:hover {
             background: var(--neon-teal);
-            color: var(--quantum-blue);
+            color: var(--Cyber-blue);
             box-shadow: 0 0 15px var(--neon-teal);
         }
         
@@ -260,7 +260,7 @@
         }
         
         .modal-content {
-            background: var(--quantum-blue);
+            background: var(--Cyber-blue);
             margin: 2rem auto;
             padding: 2rem;
             max-width: 800px;
@@ -445,7 +445,7 @@
     <div class="grid-overlay"></div>
     <div class="container">
         <header class="header">
-            <div class="logo">QUANTUMTRADER</div>
+            <div class="logo">CyberTRADER</div>
            <button class="profile-btn" onclick="window.location.href='profile/login.html'">PROFILE</button>
         </header>
         
@@ -536,8 +536,8 @@
             </div>
             
             <div class="ai-analysis">
-                <h3 class="ai-title">QUANTUM AI ANALYSIS</h3>
-                <p id="aiSummary">Loading quantum analysis... Our AI is currently evaluating market trends, recent news, technical indicators, and fundamental data to provide you with the most accurate assessment.</p>
+                <h3 class="ai-title">Cyber AI ANALYSIS</h3>
+                <p id="aiSummary">Loading Cyber analysis... Our AI is currently evaluating market trends, recent news, technical indicators, and fundamental data to provide you with the most accurate assessment.</p>
                 
                 <h4>KEY METRICS</h4>
                 <ul id="keyMetrics">
@@ -553,7 +553,7 @@
             
             <div class="buy-recommendation">
                 <div class="buy-question">SHOULD I BUY THIS STOCK?</div>
-                <div class="buy-answer" id="buyRecommendation">QUANTUM AI PROCESSING...</div>
+                <div class="buy-answer" id="buyRecommendation">Cyber AI PROCESSING...</div>
             </div>
         </div>
     </div>
@@ -945,7 +945,7 @@
             document.getElementById('modalLogo').textContent = ticker;
             document.getElementById('companyName').textContent = trackedStocks[ticker] || ticker;
             document.getElementById('currentPrice').textContent = 'Loading price data...';
-            document.getElementById('aiSummary').textContent = 'Loading quantum analysis...';
+            document.getElementById('aiSummary').textContent = 'Loading Cyber analysis...';
             
             try {
                 // Fetch company profile and quote in parallel from Finnhub
@@ -1022,7 +1022,7 @@
             const isPositive = change >= 0;
             
             // Generate summary
-            let summaryText = `Our Quantum AI analysis for ${ticker} indicates ${isPositive ? 'positive' : 'negative'} momentum with a ${percentChange}% ${isPositive ? 'increase' : 'decrease'} from previous close. `;
+            let summaryText = `Our Cyber AI analysis for ${ticker} indicates ${isPositive ? 'positive' : 'negative'} momentum with a ${percentChange}% ${isPositive ? 'increase' : 'decrease'} from previous close. `;
             
             if (metricsData && metricsData.metric) {
                 const metrics = metricsData.metric;
