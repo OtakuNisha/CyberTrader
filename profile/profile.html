@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberTrader | Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        :root {
+            --cyber-blue: #0a0a2a;
+            --neon-teal: #00ffcc;
+            --neon-purple: #cc00ff;
+            --text-glow: 0 0 10px var(--neon-teal);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--cyber-blue);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--neon-teal);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--neon-teal);
+            text-shadow: var(--text-glow);
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+        
+        .logout-btn {
+            background: rgba(10, 10, 42, 0.7);
+            border: 1px solid var(--neon-teal);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--neon-teal);
+            object-fit: cover;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-teal);
+            transition: transform 0.3s;
+        }
+        
+        .profile-pic:hover {
+            transform: scale(1.05);
+        }
+        
+        .profile-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-email {
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+        
+        .change-pic-btn {
+            background: transparent;
+            border: 1px solid var(--neon-purple);
+            color: var(--neon-purple);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1rem;
+        }
+        
+        .change-pic-btn:hover {
+            background: var(--neon-purple);
+            color: white;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-teal);
+            border-bottom: 1px solid var(--neon-teal);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .portfolio-section, .watched-stocks {
+            margin-bottom: 3rem;
+        }
+        
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stock-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-teal);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--neon-teal);
+        }
+        
+        .stock-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-price {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .price-up {
+            color: #00ff88;
+        }
+        
+        .price-down {
+            color: #ff0066;
+        }
+        
+        .add-stock-btn {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .add-stock-btn:hover {
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .connect-brokerage {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed var(--neon-teal);
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .connect-brokerage:hover {
+            background: rgba(0, 255, 204, 0.1);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: var(--cyber-blue);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--neon-teal);
+            box-shadow: 0 0 20px var(--neon-teal);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', sans-serif);
+            color: var(--neon-teal);
+            margin-bottom: 1.5rem;
+        }
+        
+        .image-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .image-option {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .image-option:hover, .image-option.selected {
+            border-color: var(--neon-teal);
+            transform: scale(1.05);
+        }
+        
+        .custom-url-input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-teal);
+            color: white;
+        }
+        
+        .save-pic-btn {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif);
+            width: 100%;
+        }
+        
+        /* Autocomplete styles */
+        .autocomplete {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .autocomplete-input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-teal);
+            color: white;
+        }
+        
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid var(--neon-teal);
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: var(--cyber-blue);
+            border-bottom: 1px solid var(--neon-teal);
+        }
+        
+        .autocomplete-items div:hover {
+            background-color: rgba(0, 255, 204, 0.1);
+        }
+        
+        .autocomplete-active {
+            background-color: var(--neon-teal) !important;
+            color: var(--cyber-blue);
+        }
+        
+        /* Robinhood connection styles */
+        .robinhood-connection {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .robinhood-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-teal);
+            color: white;
+        }
+        
+        .robinhood-btn {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif);
+        }
+    </style>
+</head>
+<body>
+    <header class="profile-header">
+        <div class="logo" onclick="window.location.href='../index.html'">CyberTRADER</div>
+        <button class="logout-btn" id="logoutBtn">LOGOUT</button>
+    </header>
+    
+    <div class="profile-container">
+        <div class="profile-info">
+            <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-pic" id="profilePic">
+            <h2 class="profile-name" id="profileName">Username</h2>
+            <p class="profile-email" id="profileEmail">user@example.com</p>
+            <button class="change-pic-btn" id="changePicBtn">Change Profile Picture</button>
+        </div>
+        
+        <div class="portfolio-section">
+            <h3 class="section-title">MY PORTFOLIO</h3>
+            <div class="stock-grid" id="portfolioGrid">
+                <!-- Portfolio stocks will be added here -->
+            </div>
+            <div class="connect-brokerage" id="connectBrokerage">
+                + Connect Your Brokerage Account
+            </div>
+        </div>
+        
+        <div class="watched-stocks">
+            <h3 class="section-title">WATCHED STOCKS</h3>
+            <div class="stock-grid" id="watchedStocksGrid">
+                <!-- Watched stocks will be added here -->
+            </div>
+            <button class="add-stock-btn" id="addStockBtn">+ Add Stock to Watchlist</button>
+        </div>
+    </div>
+    
+    <!-- Profile Picture Modal -->
+    <div class="modal" id="profilePicModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closePicModal">&times;</button>
+            <h3 class="modal-title">Change Profile Picture</h3>
+            
+            <div class="image-options">
+                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="image-option" data-url="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+                <img src="https://cdn-icons-png.flaticon.com/512/921/921071.png" class="image-option" data-url="https://cdn-icons-png.flaticon.com/512/921/921071.png">
+                <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" class="image-option" data-url="https://cdn-icons-png.flaticon.com/512/4333/4333609.png">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" class="image-option" data-url="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+                <img src="https://cdn-icons-png.flaticon.com/512/3220/3220315.png" class="image-option" data-url="https://cdn-icons-png.flaticon.com/512/3220/3220315.png">
+                <img src="https://cdn-icons-png.flaticon.com/512/706/706830.png" class="image-option" data-url="https://cdn-icons-png.flaticon.com/512/706/706830.png">
+            </div>
+            
+            <p>Or enter a custom URL:</p>
+            <input type="text" class="custom-url-input" id="customPicUrl" placeholder="https://example.com/image.jpg">
+            <button class="save-pic-btn" id="savePicBtn">Save Profile Picture</button>
+        </div>
+    </div>
+    
+    <!-- Add Stock Modal -->
+    <div class="modal" id="addStockModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeStockModal">&times;</button>
+            <h3 class="modal-title">Add Stock to Watchlist</h3>
+            
+            <div class="autocomplete">
+                <input type="text" class="autocomplete-input" id="stockInput" placeholder="Search by company name or symbol...">
+                <div class="autocomplete-items" id="autocompleteResults"></div>
+            </div>
+            
+            <button class="save-pic-btn" id="addStockModalBtn">Add Stock</button>
+        </div>
+    </div>
+    
+    <!-- Robinhood Connection Modal -->
+    <div class="modal" id="robinhoodModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeRobinhoodModal">&times;</button>
+            <h3 class="modal-title">Connect Robinhood Account</h3>
+            
+            <div class="robinhood-connection">
+                <input type="text" class="robinhood-input" id="robinhoodUsername" placeholder="Robinhood Username">
+                <input type="password" class="robinhood-input" id="robinhoodPassword" placeholder="Robinhood Password">
+                <button class="robinhood-btn" id="connectRobinhoodBtn">Connect</button>
+                <p style="font-size: 0.8rem; color: #aaa;">Note: This is a demo. In a real application, we would use OAuth for secure connection.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Stock database for autocomplete (contains both company names and symbols)
+        const stockDatabase = [
+            { symbol: 'AAPL', name: 'Apple Inc.' },
+            { symbol: 'MSFT', name: 'Microsoft Corporation' },
+            { symbol: 'GOOGL', name: 'Alphabet Inc. (Google)' },
+            { symbol: 'AMZN', name: 'Amazon.com Inc.' },
+            { symbol: 'TSLA', name: 'Tesla Inc.' },
+            { symbol: 'NVDA', name: 'NVIDIA Corporation' },
+            { symbol: 'META', name: 'Meta Platforms Inc. (Facebook)' },
+            { symbol: 'JPM', name: 'JPMorgan Chase & Co.' },
+            { symbol: 'V', name: 'Visa Inc.' },
+            { symbol: 'PYPL', name: 'PayPal Holdings' },
+            { symbol: 'WMT', name: 'Walmart Inc.' },
+            { symbol: 'KO', name: 'Coca-Cola Company' },
+            { symbol: 'PEP', name: 'PepsiCo Inc.' },
+            { symbol: 'NKE', name: 'Nike Inc.' },
+            { symbol: 'DIS', name: 'The Walt Disney Company' },
+            { symbol: 'NFLX', name: 'Netflix Inc.' },
+            { symbol: 'SPY', name: 'SPDR S&P 500 ETF' },
+            { symbol: 'QQQ', name: 'Invesco QQQ Trust' },
+            { symbol: 'DIA', name: 'SPDR Dow Jones Industrial Average ETF' },
+            { symbol: 'IWM', name: 'iShares Russell 2000 ETF' }
+        ];
+        
+        // Default profile picture
+        const DEFAULT_PROFILE_PIC = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+        
+        // Load user data
+        const userData = JSON.parse(localStorage.getItem('CyberUser'));
+        if (!userData) {
+            window.location.href = 'login.html';
+        }
+        
+        // Initialize UI with user data
+        function initializeUserUI() {
+            document.getElementById('profileName').textContent = userData.username;
+            document.getElementById('profileEmail').textContent = userData.email;
+            
+            // Set default profile picture if none exists
+            if (!userData.profilePic) {
+                userData.profilePic = DEFAULT_PROFILE_PIC;
+                localStorage.setItem('CyberUser', JSON.stringify(userData));
+            }
+            document.getElementById('profilePic').src = userData.profilePic;
+            
+            // Load portfolio and watched stocks
+            loadWatchedStocks();
+            loadPortfolio();
+        }
+        
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('CyberUser');
+            window.location.href = 'login.html';
+        });
+        
+        // Change profile picture modal
+        const profilePicModal = document.getElementById('profilePicModal');
+        const changePicBtn = document.getElementById('changePicBtn');
+        const closePicModal = document.getElementById('closePicModal');
+        const savePicBtn = document.getElementById('savePicBtn');
+        const customPicUrl = document.getElementById('customPicUrl');
+        let selectedImageUrl = '';
+        
+        changePicBtn.addEventListener('click', function() {
+            profilePicModal.style.display = 'flex';
+            selectedImageUrl = userData.profilePic;
+        });
+        
+        closePicModal.addEventListener('click', function() {
+            profilePicModal.style.display = 'none';
+        });
+        
+        // Image selection in modal
+        document.querySelectorAll('.image-option').forEach(img => {
+            img.addEventListener('click', function() {
+                document.querySelectorAll('.image-option').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedImageUrl = this.dataset.url;
+                customPicUrl.value = '';
+            });
+        });
+        
+        customPicUrl.addEventListener('input', function() {
+            selectedImageUrl = this.value;
+            document.querySelectorAll('.image-option').forEach(i => i.classList.remove('selected'));
+        });
+        
+        savePicBtn.addEventListener('click', function() {
+            if (selectedImageUrl) {
+                document.getElementById('profilePic').src = selectedImageUrl;
+                userData.profilePic = selectedImageUrl;
+                localStorage.setItem('CyberUser', JSON.stringify(userData));
+                profilePicModal.style.display = 'none';
+            } else {
+                alert('Please select an image or enter a URL');
+            }
+        });
+        
+        // Add stock modal with autocomplete
+        const addStockModal = document.getElementById('addStockModal');
+        const addStockBtn = document.getElementById('addStockBtn');
+        const closeStockModal = document.getElementById('closeStockModal');
+        const stockInput = document.getElementById('stockInput');
+        const autocompleteResults = document.getElementById('autocompleteResults');
+        const addStockModalBtn = document.getElementById('addStockModalBtn');
+        let selectedStock = null;
+        
+        addStockBtn.addEventListener('click', function() {
+            addStockModal.style.display = 'flex';
+            stockInput.value = '';
+            autocompleteResults.innerHTML = '';
+            selectedStock = null;
+        });
+        
+        closeStockModal.addEventListener('click', function() {
+            addStockModal.style.display = 'none';
+        });
+        
+        // Autocomplete functionality
+        stockInput.addEventListener('input', function() {
+            const input = this.value.toLowerCase();
+            autocompleteResults.innerHTML = '';
+            
+            if (!input) return;
+            
+            const matches = stockDatabase.filter(stock => 
+                stock.symbol.toLowerCase().includes(input) || 
+                stock.name.toLowerCase().includes(input)
+            ).slice(0, 5);
+            
+            matches.forEach(stock => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${stock.symbol}</strong> - ${stock.name}`;
+                div.addEventListener('click', function() {
+                    stockInput.value = `${stock.symbol} - ${stock.name}`;
+                    selectedStock = stock.symbol;
+                    autocompleteResults.innerHTML = '';
+                });
+                autocompleteResults.appendChild(div);
+            });
+        });
+        
+        // Add stock to watchlist
+        addStockModalBtn.addEventListener('click', function() {
+            if (!selectedStock && stockInput.value) {
+                // Try to extract symbol if user typed manually
+                const input = stockInput.value.trim();
+                const possibleMatch = stockDatabase.find(stock => 
+                    stock.symbol === input || 
+                    stock.name.toLowerCase() === input.toLowerCase()
+                );
+                
+                if (possibleMatch) {
+                    selectedStock = possibleMatch.symbol;
+                } else {
+                    // If no exact match, use the input as symbol (might not work for all cases)
+                    selectedStock = input.split(' ')[0].toUpperCase();
+                }
+            }
+            
+            if (selectedStock) {
+                if (!userData.watchedStocks) userData.watchedStocks = [];
+                
+                if (!userData.watchedStocks.includes(selectedStock)) {
+                    userData.watchedStocks.push(selectedStock);
+                    localStorage.setItem('CyberUser', JSON.stringify(userData));
+                    loadWatchedStocks();
+                    addStockModal.style.display = 'none';
+                } else {
+                    alert('This stock is already in your watchlist');
+                }
+            } else {
+                alert('Please select a valid stock');
+            }
+        });
+        
+        // Robinhood connection modal
+        const robinhoodModal = document.getElementById('robinhoodModal');
+        const connectBrokerage = document.getElementById('connectBrokerage');
+        const closeRobinhoodModal = document.getElementById('closeRobinhoodModal');
+        const connectRobinhoodBtn = document.getElementById('connectRobinhoodBtn');
+        
+        connectBrokerage.addEventListener('click', function() {
+            robinhoodModal.style.display = 'flex';
+        });
+        
+        closeRobinhoodModal.addEventListener('click', function() {
+            robinhoodModal.style.display = 'none';
+        });
+        
+        // Mock Robinhood connection
+        connectRobinhoodBtn.addEventListener('click', function() {
+            const username = document.getElementById('robinhoodUsername').value;
+            const password = document.getElementById('robinhoodPassword').value;
+            
+            if (username && password) {
+                // In a real app, this would connect to Robinhood API
+                // For demo, we'll simulate a connection and add some mock portfolio data
+                if (!userData.portfolio) userData.portfolio = {};
+                
+                // Add some sample portfolio data
+                userData.portfolio['AAPL'] = { shares: 10, invested: 1500 };
+                userData.portfolio['TSLA'] = { shares: 5, invested: 3500 };
+                userData.portfolio['SPY'] = { shares: 20, invested: 8000 };
+                
+                localStorage.setItem('CyberUser', JSON.stringify(userData));
+                loadPortfolio();
+                robinhoodModal.style.display = 'none';
+                alert('Successfully connected to Robinhood (demo)');
+            } else {
+                alert('Please enter both username and password');
+            }
+        });
+        
+        // Load watched stocks
+        function loadWatchedStocks() {
+            const watchedStocksGrid = document.getElementById('watchedStocksGrid');
+            watchedStocksGrid.innerHTML = '';
+            
+            if (userData.watchedStocks && userData.watchedStocks.length > 0) {
+                userData.watchedStocks.forEach(stock => {
+                    fetchStockData(stock, watchedStocksGrid);
+                });
+            } else {
+                watchedStocksGrid.innerHTML = '<p>No stocks in watchlist yet.</p>';
+            }
+        }
+        
+        // Load portfolio stocks
+        function loadPortfolio() {
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            portfolioGrid.innerHTML = '';
+            
+            if (userData.portfolio && Object.keys(userData.portfolio).length > 0) {
+                Object.keys(userData.portfolio).forEach(stock => {
+                    fetchStockData(stock, portfolioGrid, userData.portfolio[stock]);
+                });
+            } else {
+                portfolioGrid.innerHTML = '<p>No stocks in portfolio yet. Connect your brokerage to see your portfolio.</p>';
+            }
+        }
+        
+        // Fetch stock data from Finnhub
+        function fetchStockData(symbol, container, portfolioData = null) {
+            fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=d0uelbpr01qn5fk4u25gd0uelbpr01qn5fk4u260`)
+                .then(response => response.json())
+                .then(data => {
+                    const stockCard = document.createElement('div');
+                    stockCard.className = 'stock-card';
+                    
+                    const change = data.c - data.pc;
+                    const percentChange = (change / data.pc * 100).toFixed(2);
+                    const changeClass = change >= 0 ? 'price-up' : 'price-down';
+                    const changeSymbol = change >= 0 ? '+' : '';
+                    
+                    // Find company name for display
+                    const stockInfo = stockDatabase.find(s => s.symbol === symbol);
+                    const displayName = stockInfo ? `${symbol} - ${stockInfo.name}` : symbol;
+                    
+                    let stockInfoHTML = `
+                        <div class="stock-name">${displayName}</div>
+                        <div class="stock-price">$${data.c.toFixed(2)}</div>
+                        <div class="${changeClass}">${changeSymbol}${percentChange}%</div>
+                    `;
+                    
+                    if (portfolioData) {
+                        const investmentValue = portfolioData.shares * data.c;
+                        const profit = investmentValue - portfolioData.invested;
+                        const profitClass = profit >= 0 ? 'price-up' : 'price-down';
+                        const profitSymbol = profit >= 0 ? '+' : '';
+                        
+                        stockInfoHTML += `
+                            <hr>
+                            <div>Shares: ${portfolioData.shares}</div>
+                            <div>Invested: $${portfolioData.invested.toFixed(2)}</div>
+                            <div>Value: $${investmentValue.toFixed(2)}</div>
+                            <div class="${profitClass}">${profitSymbol}$${Math.abs(profit).toFixed(2)} (${profitSymbol}${(profit/portfolioData.invested*100).toFixed(2)}%)</div>
+                        `;
+                    }
+                    
+                    stockCard.innerHTML = stockInfoHTML;
+                    container.appendChild(stockCard);
+                })
+                .catch(error => {
+                    console.error('Error fetching stock data:', error);
+                    const stockCard = document.createElement('div');
+                    stockCard.className = 'stock-card';
+                    stockCard.innerHTML = `<div class="stock-name">${symbol}</div><div>Data unavailable</div>`;
+                    container.appendChild(stockCard);
+                });
+        }
+        
+        // Initialize the UI
+        initializeUserUI();
+    </script>
+</body>
+</html>
