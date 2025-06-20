@@ -1,0 +1,35 @@
+<script src="auth.js"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    const user = authenticateUser(email, password);
+    
+    if (user) {
+        // Add any additional user data you need
+        user.watchedStocks = user.watchedStocks || ['AAPL', 'TSLA', 'NVDA'];
+        user.portfolio = user.portfolio || {};
+        
+        localStorage.setItem('CyberUser', JSON.stringify(user));
+        
+        // Check for redirect URL or go to profile
+        const redirectUrl = localStorage.getItem('redirectUrl') || 'profile.html';
+        localStorage.removeItem('redirectUrl');
+        window.location.href = redirectUrl;
+    } else {
+        showError('The email or password you entered is incorrect');
+    }
+});
+
+function showError(message) {
+    const errorElement = document.getElementById('errorMessage');
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+    setTimeout(() => {
+        errorElement.style.display = 'none';
+    }, 3000);
+}
+</script>
