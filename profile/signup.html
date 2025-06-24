@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberTrader | Sign Up</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        :root {
+            --cyber-blue: #0a0a2a;
+            --neon-teal: #00ffcc;
+            --neon-purple: #cc00ff;
+            --text-glow: 0 0 10px var(--neon-teal);
+            --cyber-dark: #050517;
+            --cyber-light: #1a1a2e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--cyber-blue);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(5, 5, 23, 0.9), rgba(10, 10, 42, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="2" height="2" x="0" y="0" fill="%2300ffcc" opacity="0.2"/></svg>');
+            background-size: 30px 30px;
+        }
+        
+        .signup-container {
+            background: rgba(5, 5, 23, 0.8);
+            border: 1px solid var(--neon-teal);
+            border-radius: 12px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .signup-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-teal);
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: var(--text-glow);
+            cursor: pointer;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        
+        .signup-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--neon-teal);
+            margin: 0.5rem auto;
+            box-shadow: var(--text-glow);
+        }
+        
+        .form-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--neon-teal);
+            font-weight: 500;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid var(--neon-teal);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px var(--neon-purple);
+            background: rgba(26, 26, 46, 0.9);
+        }
+        
+        .signup-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .signup-btn:hover {
+            background: var(--neon-purple);
+            color: white;
+            box-shadow: 0 0 30px var(--neon-purple);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--neon-teal);
+            font-size: 0.95rem;
+        }
+        
+        .login-link a {
+            color: var(--neon-purple);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .login-link a:hover {
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+        
+        .error-message {
+            color: #ff0066;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 8px #ff0066;
+            display: none;
+            font-weight: 500;
+            padding: 0.8rem;
+            background: rgba(255, 0, 102, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid #ff0066;
+        }
+        
+        .success-message {
+            color: #00ff88;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 8px #00ff88;
+            display: none;
+            font-weight: 500;
+            padding: 0.8rem;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1 class="signup-title" onclick="window.location.href='../index.html'">CyberTRADER</h1>
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" required>
+            </div>
+            <button type="submit" class="signup-btn">Create Account</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="login.html">Login</a>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            const result = registerUser(username, email, password);
+            
+            if (result.success) {
+                showSuccess('Account created successfully! Redirecting...');
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 2000);
+            } else {
+                showError(result.message);
+            }
+        });
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
