@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Trading Simulator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, hsl(0, 0%, 4%) 0%, hsl(0, 0%, 10%) 100%);
+            color: hsl(0, 0%, 98%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        .cyber-header {
+            background: hsl(0, 0%, 10%);
+            border-bottom: 1px solid hsl(180, 100%, 50%);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cyber-title {
+            color: hsl(180, 100%, 50%);
+            font-size: 2rem;
+            font-weight: 900;
+        }
+        
+        .status-indicator {
+            color: hsl(120, 100%, 50%);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: hsl(120, 100%, 50%);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .balance-info {
+            display: flex;
+            gap: 30px;
+            text-align: right;
+        }
+        
+        .balance-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .balance-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .balance-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .balance-virtual { color: hsl(120, 100%, 50%); }
+        .balance-portfolio { color: hsl(180, 100%, 50%); }
+        
+        /* Ticker Styles */
+        .ticker-container {
+            background: #000;
+            border-top: 1px solid hsl(328, 100%, 54%);
+            overflow: hidden;
+            height: 40px;
+        }
+        
+        .ticker-content {
+            display: flex;
+            animation: ticker 30s linear infinite;
+            padding: 10px 0;
+            gap: 60px;
+            white-space: nowrap;
+        }
+        
+        .ticker-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .ticker-positive { color: hsl(120, 100%, 50%); }
+        .ticker-negative { color: hsl(328, 100%, 54%); }
+        
+        /* Main Container */
+        .cyber-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .trading-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 1200px) {
+            .trading-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .trading-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Card Styles */
+        .cyber-card {
+            background: hsl(0, 0%, 10%);
+            border: 1px solid;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 255, 255, 0.02) 50%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .card-portfolio { border-color: hsl(180, 100%, 50%); }
+        .card-time { border-color: hsl(276, 100%, 50%); }
+        .card-search { border-color: hsl(120, 100%, 50%); }
+        .card-trading { border-color: hsl(328, 100%, 54%); }
+        .card-chart { border-color: hsl(180, 100%, 50%); }
+        .card-ai { border-color: hsl(120, 100%, 50%); }
+        .card-history { border-color: hsl(328, 100%, 54%); }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 8px;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .title-portfolio { color: hsl(180, 100%, 50%); }
+        .title-time { color: hsl(276, 100%, 50%); }
+        .title-search { color: hsl(120, 100%, 50%); }
+        .title-trading { color: hsl(328, 100%, 54%); }
+        .title-chart { color: hsl(180, 100%, 50%); }
+        .title-ai { color: hsl(120, 100%, 50%); }
+        .title-history { color: hsl(328, 100%, 54%); }
+        
+        /* Button Styles */
+        .cyber-button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+        }
+        
+        .btn-blue {
+            background: hsl(180, 100%, 50%);
+            color: hsl(0, 0%, 4%);
+        }
+        
+        .btn-blue:hover {
+            background: hsl(180, 100%, 60%);
+            box-shadow: 0 0 20px hsl(180, 100%, 50%);
+        }
+        
+        .btn-green {
+            background: hsl(120, 100%, 50%);
+            color: hsl(0, 0%, 4%);
+        }
+        
+        .btn-green:hover {
+            background: hsl(120, 100%, 60%);
+            box-shadow: 0 0 20px hsl(120, 100%, 50%);
+        }
+        
+        .btn-pink {
+            background: hsl(328, 100%, 54%);
+            color: hsl(0, 0%, 4%);
+        }
+        
+        .btn-pink:hover {
+            background: hsl(328, 100%, 64%);
+            box-shadow: 0 0 20px hsl(328, 100%, 54%);
+        }
+        
+        .btn-purple {
+            background: hsl(276, 100%, 50%);
+            color: hsl(0, 0%, 4%);
+        }
+        
+        .btn-purple:hover {
+            background: hsl(276, 100%, 60%);
+            box-shadow: 0 0 20px hsl(276, 100%, 50%);
+        }
+        
+        .btn-secondary {
+            background: hsl(0, 0%, 20%);
+            color: hsl(0, 0%, 98%);
+            border: 1px solid hsl(0, 0%, 40%);
+        }
+        
+        .btn-secondary:hover {
+            background: hsl(180, 100%, 50%);
+            color: hsl(0, 0%, 4%);
+            border-color: hsl(180, 100%, 50%);
+        }
+        
+        /* Input Styles */
+        .cyber-input, .cyber-select {
+            background: hsl(0, 0%, 4%);
+            border: 1px solid hsl(180, 100%, 50%);
+            color: hsl(0, 0%, 98%);
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .cyber-input:focus, .cyber-select:focus {
+            border-color: hsl(120, 100%, 50%);
+            box-shadow: 0 0 10px hsl(120, 100%, 50%);
+            outline: none;
+        }
+        
+        /* Portfolio Styles */
+        .portfolio-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #000;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid;
+        }
+        
+        .stat-gains { border-color: hsl(120, 100%, 50%); }
+        .stat-day { border-color: hsl(328, 100%, 54%); }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .stat-change {
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+        
+        .positive { color: hsl(120, 100%, 50%); }
+        .negative { color: hsl(328, 100%, 54%); }
+        
+        /* Holdings */
+        .holdings-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .holding-item {
+            background: #000;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid hsl(0, 0%, 30%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .holding-symbol {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .holding-details {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .holding-value {
+            text-align: right;
+        }
+        
+        /* Stock List */
+        .stock-item {
+            background: hsl(0, 0%, 4%);
+            border: 1px solid hsl(0, 0%, 30%);
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stock-item:hover {
+            border-color: hsl(120, 100%, 50%);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+        
+        .stock-item.selected {
+            border-color: hsl(120, 100%, 50%);
+            background: rgba(0, 255, 0, 0.05);
+        }
+        
+        .stock-symbol {
+            font-weight: bold;
+            color: white;
+        }
+        
+        .stock-name {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .stock-price {
+            color: white;
+        }
+        
+        .stock-change {
+            font-size: 0.8rem;
+        }
+        
+        /* Trading Interface */
+        .trading-section {
+            margin-bottom: 15px;
+        }
+        
+        .selected-stock-display {
+            background: #000;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid hsl(328, 100%, 54%);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .quick-amount-btn {
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .trading-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .trading-actions button {
+            flex: 1;
+        }
+        
+        /* Price Chart */
+        .chart-container {
+            background: #000;
+            border: 1px solid hsl(180, 100%, 50%);
+            border-radius: 4px;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .chart-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .chart-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.05) 100%);
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 20px;
+        }
+        
+        .chart-bar {
+            width: 4px;
+            background: hsl(180, 100%, 50%);
+            animation: chartPulse 2s ease-in-out infinite;
+        }
+        
+        .chart-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chart-timeframes {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .timeframe-btn {
+            padding: 5px 10px;
+            font-size: 0.7rem;
+        }
+        
+        .timeframe-btn.active {
+            background: hsl(180, 100%, 50%);
+            color: hsl(0, 0%, 4%);
+        }
+        
+        .chart-updated {
+            font-size: 0.7rem;
+            color: #666;
+        }
+        
+        /* AI Recommendations */
+        .ai-status {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid hsl(120, 100%, 50%);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .ai-confidence {
+            margin-top: 10px;
+        }
+        
+        .confidence-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .confidence-bar {
+            width: 100%;
+            height: 8px;
+            background: hsl(0, 0%, 30%);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: hsl(120, 100%, 50%);
+            transition: width 0.5s ease;
+        }
+        
+        .confidence-text {
+            font-size: 0.8rem;
+            color: hsl(120, 100%, 50%);
+            margin-top: 5px;
+        }
+        
+        .recommendation-item {
+            background: #000;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .rec-buy { border-color: hsl(120, 100%, 50%); }
+        .rec-sell { border-color: hsl(328, 100%, 54%); }
+        .rec-watch { border-color: hsl(180, 100%, 50%); }
+        
+        .recommendation-item:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+        
+        .rec-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .rec-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .rec-action {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .rec-reasoning {
+            font-size: 0.8rem;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        /* Transaction History */
+        .history-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .transaction-item {
+            background: #000;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid hsl(0, 0%, 30%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .transaction-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+        
+        .transaction-details {
+            text-align: right;
+        }
+        
+        .transaction-amount {
+            color: white;
+        }
+        
+        .transaction-date {
+            font-size: 0.7rem;
+            color: #666;
+        }
+        
+        /* Time Controls */
+        .current-date {
+            background: #000;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid hsl(276, 100%, 50%);
+            margin-bottom: 15px;
+        }
+        
+        .date-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .date-value {
+            font-family: 'JetBrains Mono', monospace;
+            color: hsl(276, 100%, 50%);
+            font-size: 1rem;
+        }
+        
+        .time-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .simulation-status {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid hsl(0, 0%, 30%);
+        }
+        
+        .status-indicator-full {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-dot-full {
+            width: 8px;
+            height: 8px;
+            background: hsl(120, 100%, 50%);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: hsl(120, 100%, 50%);
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        @keyframes chartPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: hsl(0, 0%, 10%);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: hsl(180, 100%, 50%);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: hsl(120, 100%, 50%);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="cyber-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <h1 class="cyber-title">🤖 CYBERTRADER</h1>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    SYSTEM ONLINE
+                </div>
+            </div>
+            <div class="balance-info">
+                <div class="balance-item">
+                    <div class="balance-label">Virtual Balance</div>
+                    <div class="balance-value balance-virtual">$<span id="header-balance">10000.00</span></div>
+                </div>
+                <div class="balance-item">
+                    <div class="balance-label">Portfolio Value</div>
+                    <div class="balance-value balance-portfolio">$<span id="header-portfolio">10000.00</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Stock Ticker -->
+    <div class="ticker-container">
+        <div class="ticker-content" id="ticker">
+            <!-- Dynamic ticker content -->
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="cyber-container">
+        <div class="trading-grid">
+            <!-- Portfolio Dashboard -->
+            <div class="cyber-card card-portfolio">
+                <div class="card-header">
+                    <span>📊</span>
+                    <h3 class="card-title title-portfolio">PORTFOLIO</h3>
+                    <span style="margin-left: auto; font-size: 0.7rem; color: hsl(120, 100%, 50%);">REAL-TIME</span>
+                </div>
+                
+                <div class="portfolio-stats">
+                    <div class="stat-card stat-gains">
+                        <div class="stat-label">Total Gains</div>
+                        <div class="stat-value positive" id="total-gains">+$0.00</div>
+                        <div class="stat-change positive" id="gains-percent">+0.00%</div>
+                    </div>
+                    <div class="stat-card stat-day">
+                        <div class="stat-label">Day Change</div>
+                        <div class="stat-value positive" id="day-change">📈 +$0.00</div>
+                        <div class="stat-change positive" id="day-percent">+0.00%</div>
+                    </div>
+                </div>
+                
+                <h4 class="title-portfolio" style="margin-bottom: 10px; font-size: 0.9rem;">CURRENT HOLDINGS</h4>
+                <div class="holdings-container" id="holdings-list">
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <div>No holdings yet. Start trading!</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Time Controls -->
+            <div class="cyber-card card-time">
+                <div class="card-header">
+                    <span>⏰</span>
+                    <h3 class="card-title title-time">TIME MACHINE</h3>
+                </div>
+                
+                <div class="current-date">
+                    <div class="date-label">Current Date</div>
+                    <div class="date-value" id="current-date">2025-01-01</div>
+                </div>
+                
+                <div class="time-controls">
+                    <button class="cyber-button btn-purple" onclick="accelerateTime()">
+                        ⚡ <span id="accelerate-text">ACCELERATE</span>
+                    </button>
+                    <button class="cyber-button btn-secondary" onclick="resetTime()">
+                        🔄 RESET
+                    </button>
+                </div>
+                
+                <select id="time-period" class="cyber-select">
+                    <option value="1d">1 Day Forward</option>
+                    <option value="1w" selected>1 Week Forward</option>
+                    <option value="1m">1 Month Forward</option>
+                    <option value="3m">3 Months Forward</option>
+                    <option value="1y">1 Year Forward</option>
+                </select>
+                
+                <div class="simulation-status">
+                    <div class="date-label">Simulation Status</div>
+                    <div class="status-indicator-full">
+                        <div class="status-dot-full"></div>
+                        <span class="status-text" id="sim-status">READY FOR TIME JUMP</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stock Search -->
+            <div class="cyber-card card-search">
+                <div class="card-header">
+                    <span>🔍</span>
+                    <h3 class="card-title title-search">STOCK SCANNER</h3>
+                </div>
+                
+                <div style="position: relative; margin-bottom: 15px;">
+                    <input type="text" id="search-input" class="cyber-input" placeholder="Search stocks (AAPL, GOOGL, TSLA...)">
+                    <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: hsl(120, 100%, 50%);">🔍</span>
+                </div>
+                
+                <h4 class="title-search" style="margin-bottom: 10px; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;">
+                    📈 <span id="stock-list-title">TRENDING STOCKS</span>
+                </h4>
+                
+                <div style="max-height: 300px; overflow-y: auto;" id="stock-list">
+                    <!-- Dynamic stock list -->
+                </div>
+            </div>
+            
+            <!-- Trading Interface -->
+            <div class="cyber-card card-trading">
+                <div class="card-header">
+                    <span>⚡</span>
+                    <h3 class="card-title title-trading">TRADING TERMINAL</h3>
+                </div>
+                
+                <div class="selected-stock-display" id="selected-stock-display">
+                    <div style="color: hsl(328, 100%, 54%); font-size: 1.1rem;">Select a stock to trade</div>
+                    <div style="color: #666; font-size: 0.9rem;">$0.00</div>
+                </div>
+                
+                <div class="trading-section">
+                    <label style="display: block; color: #666; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px;">Investment Amount</label>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: hsl(120, 100%, 50%);">$</span>
+                        <input type="number" id="trade-amount" class="cyber-input" placeholder="1000.00" style="padding-left: 30px;">
+                    </div>
+                    
+                    <div class="trading-actions">
+                        <button class="cyber-button btn-green" onclick="buyStock()">
+                            📈 <span id="buy-text">BUY</span>
+                        </button>
+                        <button class="cyber-button btn-pink" onclick="sellStock()">
+                            📉 <span id="sell-text">SELL</span>
+                        </button>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 10px;">
+                        <div style="color: #666; font-size: 0.7rem;">ESTIMATED SHARES</div>
+                        <div style="color: hsl(180, 100%, 50%); font-family: 'JetBrains Mono', monospace;" id="estimated-shares">0.000000 shares</div>
+                    </div>
+                </div>
+                
+                <div class="quick-amounts">
+                    <button class="cyber-button btn-secondary quick-amount-btn" onclick="setQuickAmount(100)">$100</button>
+                    <button class="cyber-button btn-secondary quick-amount-btn" onclick="setQuickAmount(500)">$500</button>
+                    <button class="cyber-button btn-secondary quick-amount-btn" onclick="setQuickAmount(1000)">$1K</button>
+                    <button class="cyber-button btn-secondary quick-amount-btn" onclick="setQuickAmount(5000)">$5K</button>
+                </div>
+            </div>
+            
+            <!-- Price Chart -->
+            <div class="cyber-card card-chart">
+                <div class="card-header">
+                    <span>📈</span>
+                    <h3 class="card-title title-chart">PRICE ANALYSIS</h3>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-content">
+                        <div class="chart-bg"></div>
+                        <div id="chart-content-display">
+                            <div style="text-align: center; color: hsl(180, 100%, 50%); z-index: 1; position: relative;">
+                                <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                                <div style="font-family: 'JetBrains Mono', monospace;">Select stock for chart</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-controls">
+                    <div class="chart-timeframes">
+                        <button class="cyber-button btn-blue timeframe-btn active">1D</button>
+                        <button class="cyber-button btn-secondary timeframe-btn">1W</button>
+                        <button class="cyber-button btn-secondary timeframe-btn">1M</button>
+                        <button class="cyber-button btn-secondary timeframe-btn">1Y</button>
+                    </div>
+                    <div class="chart-updated">
+                        Updated: <span id="chart-time">--:--:--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Recommendations -->
+            <div class="cyber-card card-ai">
+                <div class="card-header">
+                    <span>🤖</span>
+                    <h3 class="card-title title-ai">AI ADVISOR</h3>
+                </div>
+                
+                <div class="ai-status">
+                    <div style="color: hsl(120, 100%, 50%); font-weight: bold;">NEURAL NETWORK ACTIVE</div>
+                    <div class="ai-confidence">
+                        <div class="confidence-label">AI Confidence Level</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidence-fill" style="width: 85%;"></div>
+                        </div>
+                        <div class="confidence-text" id="confidence-text">85% Confidence</div>
+                    </div>
+                </div>
+                
+                <div id="recommendations-list">
+                    <!-- Dynamic recommendations -->
+                </div>
+                
+                <button class="cyber-button btn-green" onclick="generateRecommendations()" style="width: 100%; margin-top: 10px;">
+                    🔄 <span id="rec-text">GET NEW ADVICE</span>
+                </button>
+            </div>
+            
+            <!-- Transaction History -->
+            <div class="cyber-card card-history">
+                <div class="card-header">
+                    <span>📝</span>
+                    <h3 class="card-title title-history">TRANSACTION LOG</h3>
+                </div>
+                
+                <div class="history-container" id="transaction-history">
+                    <div class="empty-state">
+                        <div class="empty-icon">📄</div>
+                        <div>No transactions yet</div>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">Start trading to see history</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let gameState = {
+            balance: 10000,
+            holdings: {},
+            selectedStock: null,
+            currentDate: new Date(),
+            transactions: [],
+            isAccelerating: false,
+            isTrading: false,
+            searchQuery: '',
+            recommendations: []
+        };
+        
+        const stocks = [
+            { symbol: 'AAPL', name: 'Apple Inc.', price: 175.23, change: 2.14, volume: 89234567, marketCap: '2.8T' },
+            { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 2845.67, change: -1.23, volume: 34567890, marketCap: '1.7T' },
+            { symbol: 'TSLA', name: 'Tesla Inc.', price: 248.95, change: 3.45, volume: 156789012, marketCap: '792B' },
+            { symbol: 'MSFT', name: 'Microsoft Corporation', price: 412.88, change: -0.87, volume: 67890123, marketCap: '3.1T' },
+            { symbol: 'META', name: 'Meta Platforms Inc.', price: 298.76, change: -2.11, volume: 78901234, marketCap: '758B' },
+            { symbol: 'NFLX', name: 'Netflix Inc.', price: 423.45, change: 4.23, volume: 23456789, marketCap: '189B' },
+            { symbol: 'NVDA', name: 'NVIDIA Corporation', price: 875.43, change: 5.67, volume: 45678901, marketCap: '2.2T' },
+            { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 3234.12, change: 1.98, volume: 56789012, marketCap: '1.5T' }
+        ];
+        
+        // Utility Functions
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+        
+        function formatPercent(value) {
+            return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+        }
+        
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+        
+        function formatTime() {
+            return new Date().toLocaleTimeString();
+        }
+        
+        // Render Functions
+        function renderTicker() {
+            const ticker = document.getElementById('ticker');
+            const tickerItems = stocks.map(stock => 
+                `<span class="ticker-item ${stock.change >= 0 ? 'ticker-positive' : 'ticker-negative'}">
+                    ${stock.symbol}: ${formatCurrency(stock.price)} ${formatPercent(stock.change)}
+                </span>`
+            ).join('');
+            ticker.innerHTML = tickerItems;
+        }
+        
+        function renderStockList() {
+            const stockList = document.getElementById('stock-list');
+            const searchQuery = gameState.searchQuery.toUpperCase();
+            const filteredStocks = searchQuery 
+                ? stocks.filter(stock => 
+                    stock.symbol.includes(searchQuery) || 
+                    stock.name.toUpperCase().includes(searchQuery))
+                : stocks;
+            
+            document.getElementById('stock-list-title').textContent = 
+                searchQuery ? 'SEARCH RESULTS' : 'TRENDING STOCKS';
+            
+            if (filteredStocks.length === 0) {
+                stockList.innerHTML = '<div class="empty-state"><div>No stocks found</div></div>';
+                return;
+            }
+            
+            stockList.innerHTML = filteredStocks.map(stock => `
+                <div class="stock-item ${gameState.selectedStock?.symbol === stock.symbol ? 'selected' : ''}" 
+                     onclick="selectStock('${stock.symbol}')">
+                    <div>
+                        <div class="stock-symbol">${stock.symbol}</div>
+                        <div class="stock-name">${stock.name}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="stock-price">${formatCurrency(stock.price)}</div>
+                        <div class="stock-change ${stock.change >= 0 ? 'positive' : 'negative'}">
+                            ${formatPercent(stock.change)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderHoldings() {
+            const holdingsList = document.getElementById('holdings-list');
+            const holdings = Object.values(gameState.holdings);
+            
+            if (holdings.length === 0) {
+                holdingsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📊</div>
+                        <div>No holdings yet. Start trading!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            holdingsList.innerHTML = holdings.map(holding => {
+                const currentStock = stocks.find(s => s.symbol === holding.symbol);
+                const currentValue = holding.shares * currentStock.price;
+                const gainLoss = currentValue - holding.totalValue;
+                const gainLossPercent = (gainLoss / holding.totalValue) * 100;
+                
+                return `
+                    <div class="holding-item">
+                        <div>
+                            <div class="holding-symbol">${holding.symbol}</div>
+                            <div class="holding-details">${holding.shares.toFixed(2)} shares @ ${formatCurrency(holding.avgPrice)}</div>
+                        </div>
+                        <div class="holding-value">
+                            <div style="color: white;">${formatCurrency(currentValue)}</div>
+                            <div class="${gainLoss >= 0 ? 'positive' : 'negative'}">
+                                ${formatPercent(gainLossPercent)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function renderTransactions() {
+            const history = document.getElementById('transaction-history');
+            
+            if (gameState.transactions.length === 0) {
+                history.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📄</div>
+                        <div>No transactions yet</div>
+                        <div style="font-size: 0.8rem; margin-top: 5px;">Start trading to see history</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            history.innerHTML = gameState.transactions.slice(-10).reverse().map(tx => `
+                <div class="transaction-item">
+                    <div>
+                        <div class="transaction-type ${tx.type === 'buy' ? 'positive' : 'negative'}">
+                            ${tx.type === 'buy' ? '📈' : '📉'} ${tx.type.toUpperCase()}
+                            <span style="color: white; margin-left: 5px;">${tx.symbol}</span>
+                        </div>
+                        <div style="color: #666; font-size: 0.8rem;">
+                            ${tx.shares.toFixed(2)} shares
+                        </div>
+                    </div>
+                    <div class="transaction-details">
+                        <div class="transaction-amount">${formatCurrency(tx.amount)}</div>
+                        <div class="transaction-date">${tx.timestamp.toLocaleString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderChart() {
+            const chartContent = document.getElementById('chart-content-display');
+            
+            if (!gameState.selectedStock) {
+                chartContent.innerHTML = `
+                    <div style="text-align: center; color: hsl(180, 100%, 50%); z-index: 1; position: relative;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">📊</div>
+                        <div style="font-family: 'JetBrains Mono', monospace;">Select stock for chart</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const stock = gameState.selectedStock;
+            const bars = Array.from({ length: 20 }, (_, i) => 
+                `<div class="chart-bar" style="height: ${Math.random() * 40 + 10}px; animation-delay: ${i * 0.1}s;"></div>`
+            ).join('');
+            
+            chartContent.innerHTML = `
+                <div style="text-align: center; z-index: 1; position: relative;">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: hsl(180, 100%, 50%); margin-bottom: 5px;">${stock.symbol}</div>
+                    <div style="font-size: 1.2rem; color: white; margin-bottom: 5px;">${formatCurrency(stock.price)}</div>
+                    <div style="color: ${stock.change >= 0 ? 'hsl(120, 100%, 50%)' : 'hsl(328, 100%, 54%)'}; margin-bottom: 15px;">
+                        ${formatPercent(stock.change)}
+                    </div>
+                    <div class="chart-bars">${bars}</div>
+                </div>
+            `;
+            
+            document.getElementById('chart-time').textContent = formatTime();
+        }
+        
+        function renderRecommendations() {
+            const recList = document.getElementById('recommendations-list');
+            
+            if (gameState.recommendations.length === 0) {
+                generateRecommendations();
+                return;
+            }
+            
+            recList.innerHTML = gameState.recommendations.map(rec => `
+                <div class="recommendation-item rec-${rec.type}" onclick="applyRecommendation('${rec.symbol}')">
+                    <div class="rec-header">
+                        <div class="rec-icon" style="background: ${
+                            rec.type === 'buy' ? 'hsl(120, 100%, 50%)' :
+                            rec.type === 'sell' ? 'hsl(328, 100%, 54%)' : 'hsl(180, 100%, 50%)'
+                        }; color: black;">
+                            ${rec.type === 'buy' ? '📈' : rec.type === 'sell' ? '📉' : '👁'}
+                        </div>
+                        <div class="rec-action" style="color: ${
+                            rec.type === 'buy' ? 'hsl(120, 100%, 50%)' :
+                            rec.type === 'sell' ? 'hsl(328, 100%, 54%)' : 'hsl(180, 100%, 50%)'
+                        };">
+                            ${rec.type.toUpperCase()} ${rec.symbol}
+                            ${rec.amount > 0 ? ` - ${formatCurrency(rec.amount)}` : ''}
+                        </div>
+                    </div>
+                    <div class="rec-reasoning">${rec.reasoning}</div>
+                </div>
+            `).join('');
+        }
+        
+        function updateDisplay() {
+            // Update header balances
+            document.getElementById('header-balance').textContent = gameState.balance.toFixed(2);
+            
+            const holdings = Object.values(gameState.holdings);
+            const portfolioValue = gameState.balance + holdings.reduce((sum, h) => {
+                const stock = stocks.find(s => s.symbol === h.symbol);
+                return sum + (h.shares * stock.price);
+            }, 0);
+            
+            document.getElementById('header-portfolio').textContent = portfolioValue.toFixed(2);
+            
+            // Update portfolio stats
+            const totalGains = holdings.reduce((sum, h) => {
+                const stock = stocks.find(s => s.symbol === h.symbol);
+                const currentValue = h.shares * stock.price;
+                return sum + (currentValue - h.totalValue);
+            }, 0);
+            
+            const totalInvested = holdings.reduce((sum, h) => sum + h.totalValue, 0);
+            const gainsPercent = totalInvested > 0 ? (totalGains / totalInvested) * 100 : 0;
+            
+            document.getElementById('total-gains').textContent = `${totalGains >= 0 ? '+' : ''}${formatCurrency(totalGains)}`;
+            document.getElementById('total-gains').className = `stat-value ${totalGains >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('gains-percent').textContent = formatPercent(gainsPercent);
+            document.getElementById('gains-percent').className = `stat-change ${gainsPercent >= 0 ? 'positive' : 'negative'}`;
+            
+            // Day change (simplified)
+            const dayChange = portfolioValue - 10000;
+            document.getElementById('day-change').textContent = `${dayChange >= 0 ? '📈' : '📉'} ${dayChange >= 0 ? '+' : ''}${formatCurrency(Math.abs(dayChange))}`;
+            document.getElementById('day-change').className = `stat-value ${dayChange >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('day-percent').textContent = formatPercent(dayChange / 10000 * 100);
+            document.getElementById('day-percent').className = `stat-change ${dayChange >= 0 ? 'positive' : 'negative'}`;
+            
+            // Update current date
+            document.getElementById('current-date').textContent = formatDate(gameState.currentDate);
+            
+            // Update estimated shares
+            const tradeAmount = parseFloat(document.getElementById('trade-amount').value) || 0;
+            if (gameState.selectedStock && tradeAmount > 0) {
+                const estimatedShares = tradeAmount / gameState.selectedStock.price;
+                document.getElementById('estimated-shares').textContent = `${estimatedShares.toFixed(6)} shares`;
+            } else {
+                document.getElementById('estimated-shares').textContent = '0.000000 shares';
+            }
+            
+            // Render all components
+            renderTicker();
+            renderStockList();
+            renderHoldings();
+            renderTransactions();
+            renderChart();
+            renderRecommendations();
+        }
+        
+        // Trading Functions
+        function selectStock(symbol) {
+            gameState.selectedStock = stocks.find(s => s.symbol === symbol);
+            const display = document.getElementById('selected-stock-display');
+            
+            if (gameState.selectedStock) {
+                display.innerHTML = `
+                    <div style="color: hsl(328, 100%, 54%); font-size: 1.2rem; font-weight: bold;">${gameState.selectedStock.symbol}</div>
+                    <div style="color: white; font-size: 1rem; margin: 5px 0;">${formatCurrency(gameState.selectedStock.price)}</div>
+                    <div style="color: #666; font-size: 0.8rem;">${gameState.selectedStock.name}</div>
+                `;
+            }
+            
+            updateDisplay();
+        }
+        
+        function setQuickAmount(amount) {
+            document.getElementById('trade-amount').value = amount;
+            updateDisplay();
+        }
+        
+        function buyStock() {
+            if (!gameState.selectedStock) {
+                alert('Please select a stock first');
+                return;
+            }
+            
+            if (gameState.isTrading) return;
+            
+            const amount = parseFloat(document.getElementById('trade-amount').value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            if (amount > gameState.balance) {
+                alert('Insufficient balance');
+                return;
+            }
+            
+            gameState.isTrading = true;
+            document.getElementById('buy-text').textContent = 'BUYING...';
+            
+            setTimeout(() => {
+                const shares = amount / gameState.selectedStock.price;
+                
+                if (gameState.holdings[gameState.selectedStock.symbol]) {
+                    const holding = gameState.holdings[gameState.selectedStock.symbol];
+                    holding.shares += shares;
+                    holding.totalValue += amount;
+                    holding.avgPrice = holding.totalValue / holding.shares;
+                } else {
+                    gameState.holdings[gameState.selectedStock.symbol] = {
+                        symbol: gameState.selectedStock.symbol,
+                        name: gameState.selectedStock.name,
+                        shares: shares,
+                        totalValue: amount,
+                        avgPrice: gameState.selectedStock.price
+                    };
+                }
+                
+                gameState.balance -= amount;
+                gameState.transactions.push({
+                    type: 'buy',
+                    symbol: gameState.selectedStock.symbol,
+                    shares: shares,
+                    price: gameState.selectedStock.price,
+                    amount: amount,
+                    timestamp: new Date()
+                });
+                
+                document.getElementById('trade-amount').value = '';
+                document.getElementById('buy-text').textContent = 'BUY';
+                gameState.isTrading = false;
+                updateDisplay();
+            }, 1000);
+        }
+        
+        function sellStock() {
+            if (!gameState.selectedStock || !gameState.holdings[gameState.selectedStock.symbol]) {
+                alert("You don't own this stock");
+                return;
+            }
+            
+            if (gameState.isTrading) return;
+            
+            const amount = parseFloat(document.getElementById('trade-amount').value);
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+            
+            gameState.isTrading = true;
+            document.getElementById('sell-text').textContent = 'SELLING...';
+            
+            setTimeout(() => {
+                const holding = gameState.holdings[gameState.selectedStock.symbol];
+                const sharesToSell = Math.min(amount / gameState.selectedStock.price, holding.shares);
+                const saleValue = sharesToSell * gameState.selectedStock.price;
+                
+                holding.shares -= sharesToSell;
+                holding.totalValue -= saleValue;
+                
+                if (holding.shares <= 0.000001) {
+                    delete gameState.holdings[gameState.selectedStock.symbol];
+                }
+                
+                gameState.balance += saleValue;
+                gameState.transactions.push({
+                    type: 'sell',
+                    symbol: gameState.selectedStock.symbol,
+                    shares: sharesToSell,
+                    price: gameState.selectedStock.price,
+                    amount: saleValue,
+                    timestamp: new Date()
+                });
+                
+                document.getElementById('trade-amount').value = '';
+                document.getElementById('sell-text').textContent = 'SELL';
+                gameState.isTrading = false;
+                updateDisplay();
+            }, 1000);
+        }
+        
+        function accelerateTime() {
+            if (gameState.isAccelerating) return;
+            
+            gameState.isAccelerating = true;
+            document.getElementById('accelerate-text').textContent = 'JUMPING...';
+            document.getElementById('sim-status').textContent = 'TIME JUMPING...';
+            
+            const period = document.getElementById('time-period').value;
+            const newDate = new Date(gameState.currentDate);
+            
+            switch (period) {
+                case '1d':
+                    newDate.setDate(newDate.getDate() + 1);
+                    break;
+                case '1w':
+                    newDate.setDate(newDate.getDate() + 7);
+                    break;
+                case '1m':
+                    newDate.setMonth(newDate.getMonth() + 1);
+                    break;
+                case '3m':
+                    newDate.setMonth(newDate.getMonth() + 3);
+                    break;
+                case '1y':
+                    newDate.setFullYear(newDate.getFullYear() + 1);
+                    break;
+            }
+            
+            setTimeout(() => {
+                // Simulate price changes
+                stocks.forEach(stock => {
+                    const changePercent = (Math.random() - 0.5) * 0.2; // -10% to +10%
+                    stock.price *= (1 + changePercent);
+                    stock.change = changePercent * 100;
+                });
+                
+                gameState.currentDate = newDate;
+                gameState.isAccelerating = false;
+                document.getElementById('accelerate-text').textContent = 'ACCELERATE';
+                document.getElementById('sim-status').textContent = 'READY FOR TIME JUMP';
+                
+                // If we have a selected stock, update its reference
+                if (gameState.selectedStock) {
+                    gameState.selectedStock = stocks.find(s => s.symbol === gameState.selectedStock.symbol);
+                }
+                
+                updateDisplay();
+            }, 2000);
+        }
+        
+        function resetTime() {
+            gameState.currentDate = new Date();
+            updateDisplay();
+        }
+        
+        function generateRecommendations() {
+            document.getElementById('rec-text').textContent = 'ANALYZING...';
+            
+            setTimeout(() => {
+                const holdings = Object.values(gameState.holdings);
+                const recommendations = [];
+                
+                if (holdings.length === 0) {
+                    // New investor recommendations
+                    recommendations.push({
+                        type: 'buy',
+                        symbol: 'AAPL',
+                        amount: 1000,
+                        reasoning: 'Apple shows strong fundamentals and consistent growth. Perfect for building your first position.',
+                        confidence: 0.85
+                    });
+                } else {
+                    // Portfolio analysis
+                    const gainers = holdings.filter(h => {
+                        const stock = stocks.find(s => s.symbol === h.symbol);
+                        return (h.shares * stock.price) > h.totalValue;
+                    });
+                    
+                    if (gainers.length > 0) {
+                        const bestGainer = gainers[0];
+                        recommendations.push({
+                            type: 'sell',
+                            symbol: bestGainer.symbol,
+                            amount: bestGainer.totalValue * 0.25,
+                            reasoning: `Consider taking 25% profits on ${bestGainer.symbol}. Lock in gains while maintaining position.`,
+                            confidence: 0.72
+                        });
+                    }
+                }
+                
+                // Add trending stock recommendation
+                const trendingStock = stocks.sort((a, b) => b.change - a.change)[0];
+                if (!recommendations.some(r => r.symbol === trendingStock.symbol)) {
+                    recommendations.push({
+                        type: 'watch',
+                        symbol: trendingStock.symbol,
+                        amount: 0,
+                        reasoning: `${trendingStock.symbol} is trending up ${trendingStock.change.toFixed(2)}% today. Monitor for entry opportunity.`,
+                        confidence: 0.65
+                    });
+                }
+                
+                gameState.recommendations = recommendations.slice(0, 3);
+                
+                // Update confidence display
+                const avgConfidence = recommendations.reduce((sum, r) => sum + r.confidence, 0) / recommendations.length;
+                document.getElementById('confidence-fill').style.width = `${avgConfidence * 100}%`;
+                document.getElementById('confidence-text').textContent = `${(avgConfidence * 100).toFixed(0)}% Confidence`;
+                
+                document.getElementById('rec-text').textContent = 'GET NEW ADVICE';
+                updateDisplay();
+            }, 1500);
+        }
+        
+        function applyRecommendation(symbol) {
+            const stock = stocks.find(s => s.symbol === symbol);
+            if (stock) {
+                selectStock(symbol);
+            }
+        }
+        
+        // Event Listeners
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            gameState.searchQuery = e.target.value;
+            updateDisplay();
+        });
+        
+        document.getElementById('trade-amount').addEventListener('input', () => {
+            updateDisplay();
+        });
+        
+        // Chart timeframe buttons
+        document.querySelectorAll('.timeframe-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.timeframe-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('btn-secondary');
+                    b.classList.remove('btn-blue');
+                });
+                e.target.classList.add('active');
+                e.target.classList.add('btn-blue');
+                e.target.classList.remove('btn-secondary');
+                renderChart();
+            });
+        });
+        
+        // Initialize Application
+        function init() {
+            generateRecommendations();
+            updateDisplay();
+            
+            // Auto-refresh ticker every 5 seconds
+            setInterval(() => {
+                renderTicker();
+                if (gameState.selectedStock) {
+                    document.getElementById('chart-time').textContent = formatTime();
+                }
+            }, 5000);
+        }
+        
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
