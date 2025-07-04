@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Cache Control Tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberTrader | Profile</title>
+    <base href="/"> <!-- Important for GitHub Pages -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        
+        :root {
+            --cyber-blue: #0a0a2a;
+            --neon-teal: #00ffcc;
+            --neon-purple: #cc00ff;
+            --text-glow: 0 0 10px var(--neon-teal);
+            --cyber-dark: #050517;
+            --cyber-light: #1a1a2e;
+            --error-red: #ff3366;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--cyber-blue);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                linear-gradient(rgba(5, 5, 23, 0.9), rgba(10, 10, 42, 0.9)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="2" height="2" x="0" y="0" fill="%2300ffcc" opacity="0.2"/></svg>');
+            background-size: 30px 30px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            flex: 1;
+            position: relative;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--neon-teal);
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-teal);
+            text-shadow: var(--text-glow);
+            cursor: pointer;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 0, 102, 0.2);
+            border: 1px solid #ff0066;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #ff0066;
+            box-shadow: 0 0 15px #ff0066;
+        }
+        
+        .profile-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-info {
+            flex: 1;
+            background: rgba(5, 5, 23, 0.7);
+            border: 1px solid var(--neon-teal);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+        
+        .profile-pic-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-teal);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-pic-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            color: var(--neon-teal);
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .profile-pic-container:hover .profile-pic-hover {
+            opacity: 1;
+        }
+        
+        .profile-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .profile-email {
+            color: #aaa;
+            margin-bottom: 1.5rem;
+        }
+        
+        .edit-profile-btn {
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid var(--neon-teal);
+            color: var(--neon-teal);
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .edit-profile-btn:hover {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+        }
+        
+        .portfolio-section {
+            background: rgba(5, 5, 23, 0.7);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(204, 0, 255, 0.2);
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-purple);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+        
+        .portfolio-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .portfolio-change {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1.5rem;
+        }
+        
+        .portfolio-change.positive {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        
+        .portfolio-change.negative {
+            color: #ff0066;
+            text-shadow: 0 0 10px #ff0066;
+        }
+        
+        .portfolio-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-teal);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .watchlist-section {
+            background: rgba(5, 5, 23, 0.7);
+            border: 1px solid var(--neon-teal);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            position: relative;
+        }
+        
+        .watchlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .add-stock-header-btn {
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid var(--neon-teal);
+            color: var(--neon-teal);
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .add-stock-header-btn:hover {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+        }
+        
+        .stocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .stock-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--neon-teal);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .stock-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .remove-stock {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.3);
+            border: none;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .remove-stock:hover {
+            background: rgba(255, 0, 0, 0.5);
+            transform: scale(1.1);
+        }
+        
+        .stock-symbol {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-teal);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-name {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stock-price {
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stock-change {
+            font-size: 0.9rem;
+        }
+        
+        .stock-change.positive {
+            color: #00ff88;
+        }
+        
+        .stock-change.negative {
+            color: #ff0066;
+        }
+        
+        .add-stock-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px dashed var(--neon-teal);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .add-stock-btn:hover {
+            background: rgba(0, 255, 204, 0.2);
+        }
+        
+        .add-stock-icon {
+            font-size: 2rem;
+            color: var(--neon-teal);
+        }
+        
+        .no-stocks {
+            text-align: center;
+            padding: 2rem;
+            color: #777;
+            grid-column: 1 / -1;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: var(--cyber-dark);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px var(--neon-purple);
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-purple);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--neon-teal);
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(26, 26, 46, 0.7);
+            border: 1px solid var(--neon-teal);
+            border-radius: 6px;
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .modal-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.cancel {
+            background: rgba(255, 0, 102, 0.2);
+            border: 1px solid #ff0066;
+            color: white;
+        }
+        
+        .modal-btn.cancel:hover {
+            background: #ff0066;
+        }
+        
+        .modal-btn.save {
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid var(--neon-teal);
+            color: var(--neon-teal);
+        }
+        
+        .modal-btn.save:hover {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+        }
+        
+        .delete-account-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+        }
+        
+        .delete-account-btn {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff6b6b;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .delete-account-btn:hover {
+            background: rgba(255, 0, 0, 0.4);
+        }
+        
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px solid var(--neon-teal);
+            color: var(--neon-teal);
+            padding: 0.5rem 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 999;
+        }
+        
+        .help-btn:hover {
+            background: rgba(0, 255, 204, 0.3);
+            box-shadow: 0 0 10px var(--neon-teal);
+        }
+        
+        .delete-confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .delete-confirm-content {
+            background: var(--cyber-dark);
+            border: 1px solid #ff0066;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px #ff0066;
+            text-align: center;
+        }
+        
+        .delete-confirm-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #ff0066;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px #ff0066;
+        }
+        
+        .delete-confirm-text {
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+        
+        .delete-confirm-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .delete-confirm-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delete-confirm-btn.yes {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff6b6b;
+        }
+        
+        .delete-confirm-btn.yes:hover {
+            background: #ff0000;
+            color: white;
+        }
+        
+        .delete-confirm-btn.no {
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid var(--neon-teal);
+            color: var(--neon-teal);
+        }
+        
+        .delete-confirm-btn.no:hover {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+        }
+        
+        .pfp-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pfp-modal-content {
+            background: var(--cyber-dark);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 30px var(--neon-purple);
+        }
+        
+        .pfp-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .pfp-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pfp-option:hover {
+            border-color: var(--neon-teal);
+            transform: scale(1.05);
+        }
+        
+        .pfp-option.selected {
+            border-color: var(--neon-teal);
+            box-shadow: 0 0 15px var(--neon-teal);
+        }
+        
+        .pfp-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .pfp-url-input {
+            margin: 1.5rem 0;
+        }
+        
+        .csv-upload {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border: 1px dashed var(--neon-teal);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .csv-upload-btn {
+            background: rgba(0, 255, 204, 0.2);
+            border: 1px solid var(--neon-teal);
+            color: var(--neon-teal);
+            padding: 0.5rem 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+        
+        .csv-upload-btn:hover {
+            background: var(--neon-teal);
+            color: var(--cyber-blue);
+        }
+        
+        .no-data {
+            color: #777;
+            font-style: italic;
+        }
+
+        .chatbot-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chatbot-content {
+            background: var(--cyber-dark);
+            border: 1px solid var(--neon-purple);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 30px var(--neon-purple);
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        .add-stock-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-stock-content {
+            background: var(--cyber-dark);
+            border: 1px solid var(--neon-teal);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 30px var(--neon-teal);
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(0, 255, 204, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--neon-teal);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: var(--error-red);
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo" id="homeLogo">CyberTRADER</div>
+            <button class="logout-btn" id="logoutBtn">LOGOUT</button>
+        </header>
+        
+        <div class="profile-section">
+            <div class="profile-info">
+                <div class="profile-pic-container" id="profilePicContainer">
+                    <img id="profilePic" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="profile-pic">
+                    <div class="profile-pic-hover">Click to change profile picture</div>
+                </div>
+                <h2 class="profile-name" id="profileName">Username</h2>
+                <p class="profile-email" id="profileEmail">user@example.com</p>
+                <button class="edit-profile-btn" id="editProfileBtn">EDIT PROFILE</button>
+            </div>
+            
+            <div class="portfolio-section">
+                <h3 class="section-title">PORTFOLIO</h3>
+                <div id="portfolioData">
+                    <div class="csv-upload">
+                        <p>Upload your Robinhood CSV to view portfolio data</p>
+                        <input type="file" id="csvUpload" accept=".csv" style="display: none;">
+                        <button class="csv-upload-btn" id="uploadCsvBtn">UPLOAD CSV</button>
+                    </div>
+                    <div id="portfolioStats" style="display: none;">
+                        <div class="portfolio-value" id="portfolioValue">$0.00</div>
+                        <div class="portfolio-change" id="portfolioChange">+0.0% ($0.00)</div>
+                        <div class="portfolio-stats">
+                            <div class="stat-card">
+                                <div class="stat-value" id="investedValue">$0.00</div>
+                                <div class="stat-label">Invested</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="profitValue">$0.00</div>
+                                <div class="stat-label">Profit</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="roiValue">0.0%</div>
+                                <div class="stat-label">ROI</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="edit-profile-btn" id="managePortfolioBtn">MANAGE PORTFOLIO</button>
+            </div>
+        </div>
+        
+        <div class="watchlist-section">
+            <div class="watchlist-header">
+                <h3 class="section-title">WATCHLIST</h3>
+                <button class="add-stock-header-btn" id="addStockHeaderBtn">
+                    + ADD STOCK
+                </button>
+            </div>
+            <div class="stocks-grid" id="watchlistStocks">
+                <!-- Stocks will be added here dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="delete-account-container">
+        <button class="delete-account-btn" id="deleteAccountBtn">DELETE ACCOUNT</button>
+    </div>
+    
+    <button class="help-btn" id="helpBtn">HELP</button>
+    
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <h3 class="modal-title">EDIT PROFILE</h3>
+            <div class="form-group">
+                <label for="editUsername">Username</label>
+                <input type="text" id="editUsername">
+            </div>
+            <div class="form-group">
+                <label for="editEmail">Email</label>
+                <input type="email" id="editEmail">
+            </div>
+            <div class="form-group">
+                <label for="editPassword">New Password</label>
+                <input type="password" id="editPassword" placeholder="Leave blank to keep current">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="cancelEditBtn">CANCEL</button>
+                <button class="modal-btn save" id="saveProfileBtn">SAVE</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="delete-confirm-content">
+            <h3 class="delete-confirm-title">DELETE ACCOUNT</h3>
+            <p class="delete-confirm-text">Are you sure you want to delete your account and all data? This action cannot be undone.</p>
+            <div class="delete-confirm-actions">
+                <button class="delete-confirm-btn yes" id="confirmDeleteBtn">YES</button>
+                <button class="delete-confirm-btn no" id="cancelDeleteBtn">NO</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pfp-modal" id="pfpModal">
+        <div class="pfp-modal-content">
+            <h3 class="modal-title">CHANGE PROFILE PICTURE</h3>
+            <div class="pfp-options">
+                <div class="pfp-option" data-pfp="1">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" alt="PFP 1">
+                </div>
+                <div class="pfp-option" data-pfp="2">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3667/3667325.png" alt="PFP 2">
+                </div>
+                <div class="pfp-option" data-pfp="3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="PFP 3">
+                </div>
+                <div class="pfp-option" data-pfp="4">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4333/4333557.png" alt="PFP 4">
+                </div>
+                <div class="pfp-option" data-pfp="5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" alt="PFP 5">
+                </div>
+                <div class="pfp-option" data-pfp="6">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3667/3667288.png" alt="PFP 6">
+                </div>
+            </div>
+            <div class="pfp-url-input">
+                <label>Or enter image URL:</label>
+                <input type="text" id="pfpUrlInput" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="cancelPfpBtn">CANCEL</button>
+                <button class="modal-btn save" id="savePfpBtn">SAVE</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chatbot-modal" id="chatbotModal">
+        <div class="chatbot-content">
+            <h3 class="modal-title">CYBERTRADER SUPPORT</h3>
+            <iframe
+                src="https://app.livechatai.com/aibot-iframe/cmcl7rxqp0001jo0chj5pw5hl"
+                style="border:1px solid #EAEAEA"
+                width="100%"
+                height="680"
+                frameborder="0"
+                allow="microphone"
+            ></iframe>
+            <button class="modal-btn cancel" id="closeChatbotBtn" style="margin-top: 1rem;">CLOSE</button>
+        </div>
+    </div>
+    
+    <div class="add-stock-modal" id="addStockModal">
+        <div class="add-stock-content">
+            <h3 class="modal-title">ADD STOCK TO WATCHLIST</h3>
+            <div class="form-group">
+                <label for="stockSymbol">Stock Symbol</label>
+                <input type="text" id="stockSymbol" placeholder="e.g. AAPL, MSFT, TSLA">
+                <div id="stockError" class="error-message" style="display: none;"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="cancelAddStockBtn">CANCEL</button>
+                <button class="modal-btn save" id="confirmAddStockBtn">ADD STOCK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cache Busting Version Check - Update this with each deployment
+        const VERSION = "1.4";
+        if (localStorage.getItem('app_version') !== VERSION) {
+            localStorage.setItem('app_version', VERSION);
+            window.location.reload(true);
+        }
+
+        // API Keys
+        const FINNHUB_API_KEY = 'd0uelbpr01qn5fk4u25gd0uelbpr01qn5fk4u260';
+        
+        // Global variables
+        let currentUser = null;
+        let stockDataCache = {};
+        let stockUpdateInterval = null;
+        let basePath = '';
+
+        // Get user data from session storage
+        function getUserData() {
+            try {
+                const storedUser = JSON.parse(sessionStorage.getItem('cybertrader_currentUser'));
+                if (storedUser && storedUser.username && storedUser.email) {
+                    return {
+                        id: storedUser.id || generateUserId(),
+                        username: storedUser.username,
+                        email: storedUser.email,
+                        profilePic: storedUser.profilePic || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+                        watchedStocks: storedUser.watchedStocks || [],
+                        portfolio: storedUser.portfolio || null
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.error('Error retrieving user data:', error);
+                return null;
+            }
+        }
+
+        function generateUserId() {
+            return 'user-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Determine base path for GitHub Pages
+                basePath = window.location.pathname.includes('github.io') ? 
+                    window.location.pathname.split('/').slice(0, 3).join('/') : '';
+                
+                // Get user data
+                currentUser = getUserData();
+                
+                if (!currentUser) {
+                    alert('Please log in to access your profile.');
+                    window.location.href = basePath + '/login.html';
+                    return;
+                }
+                
+                // Save user data to session storage
+                sessionStorage.setItem('cybertrader_currentUser', JSON.stringify(currentUser));
+                
+                // Initialize UI with user data
+                initializeUserUI(currentUser);
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Load watchlist
+                if (currentUser.watchedStocks && currentUser.watchedStocks.length > 0) {
+                    loadWatchedStocks(currentUser.watchedStocks);
+                    startStockUpdates(currentUser.watchedStocks);
+                } else {
+                    showEmptyWatchlist();
+                }
+            } catch (error) {
+                console.error('Error during page initialization:', error);
+                alert('An error occurred while loading the page. Please try again.');
+            }
+        });
+
+        function initializeUserUI(user) {
+            try {
+                document.getElementById('profileName').textContent = user.username || 'User';
+                document.getElementById('profileEmail').textContent = user.email || 'No email';
+                
+                if (user.profilePic) {
+                    document.getElementById('profilePic').src = user.profilePic;
+                }
+                
+                document.getElementById('editUsername').value = user.username || '';
+                document.getElementById('editEmail').value = user.email || '';
+                updatePortfolioDisplay();
+            } catch (error) {
+                console.error('Error initializing UI:', error);
+            }
+        }
+
+        function setupEventListeners() {
+            try {
+                // Home logo click
+                document.getElementById('homeLogo').addEventListener('click', function() {
+                    window.location.href = basePath + '/index.html';
+                });
+                
+                // Profile picture click
+                document.getElementById('profilePicContainer').addEventListener('click', function() {
+                    document.getElementById('pfpModal').style.display = 'flex';
+                });
+                
+                // Save profile picture
+                document.getElementById('savePfpBtn').addEventListener('click', saveProfilePicture);
+                
+                // Cancel profile picture change
+                document.getElementById('cancelPfpBtn').addEventListener('click', function() {
+                    document.getElementById('pfpModal').style.display = 'none';
+                });
+                
+                // PFP selection
+                document.querySelectorAll('.pfp-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.pfp-option').forEach(opt => opt.classList.remove('selected'));
+                        this.classList.add('selected');
+                        document.getElementById('pfpUrlInput').value = '';
+                    });
+                });
+                
+                // Clear PFP selection when URL input is used
+                document.getElementById('pfpUrlInput').addEventListener('input', function() {
+                    document.querySelectorAll('.pfp-option').forEach(opt => opt.classList.remove('selected'));
+                });
+                
+                // CSV upload
+                document.getElementById('uploadCsvBtn').addEventListener('click', function() {
+                    document.getElementById('csvUpload').click();
+                });
+                
+                document.getElementById('csvUpload').addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        processCSV(e.target.files[0]);
+                    }
+                });
+                
+                // Help button
+                document.getElementById('helpBtn').addEventListener('click', function() {
+                    document.getElementById('chatbotModal').style.display = 'flex';
+                });
+                
+                // Close chatbot
+                document.getElementById('closeChatbotBtn').addEventListener('click', function() {
+                    document.getElementById('chatbotModal').style.display = 'none';
+                });
+                
+                // Close chatbot when clicking outside
+                document.getElementById('chatbotModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+                
+                // Logout button
+                document.getElementById('logoutBtn').addEventListener('click', function() {
+                    sessionStorage.removeItem('cybertrader_currentUser');
+                    window.location.href = basePath + '/login.html';
+                });
+                
+                // Delete account button
+                document.getElementById('deleteAccountBtn').addEventListener('click', function() {
+                    document.getElementById('deleteConfirmModal').style.display = 'flex';
+                });
+                
+                // Confirm delete
+                document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+                    deleteUserAccount();
+                });
+                
+                // Cancel delete
+                document.getElementById('cancelDeleteBtn').addEventListener('click', function() {
+                    document.getElementById('deleteConfirmModal').style.display = 'none';
+                });
+                
+                // Edit profile button
+                document.getElementById('editProfileBtn').addEventListener('click', function() {
+                    document.getElementById('editUsername').value = currentUser.username;
+                    document.getElementById('editEmail').value = currentUser.email;
+                    document.getElementById('editPassword').value = '';
+                    document.getElementById('editProfileModal').style.display = 'flex';
+                });
+                
+                // Save profile changes
+                document.getElementById('saveProfileBtn').addEventListener('click', saveProfileChanges);
+                
+                // Cancel edit profile
+                document.getElementById('cancelEditBtn').addEventListener('click', function() {
+                    document.getElementById('editProfileModal').style.display = 'none';
+                });
+                
+                // Add stock button - header
+                document.getElementById('addStockHeaderBtn').addEventListener('click', function() {
+                    document.getElementById('addStockModal').style.display = 'flex';
+                    document.getElementById('stockSymbol').focus();
+                });
+                
+                // Add stock button - grid
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('.add-stock-btn') || e.target.closest('.add-stock-icon')) {
+                        document.getElementById('addStockModal').style.display = 'flex';
+                        document.getElementById('stockSymbol').focus();
+                    }
+                });
+                
+                // Add stock modal buttons
+                document.getElementById('cancelAddStockBtn').addEventListener('click', function() {
+                    document.getElementById('addStockModal').style.display = 'none';
+                    document.getElementById('stockError').style.display = 'none';
+                });
+                
+                document.getElementById('confirmAddStockBtn').addEventListener('click', addStockFromModal);
+                document.getElementById('stockSymbol').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        addStockFromModal();
+                    }
+                });
+                
+                // Manage portfolio button
+                document.getElementById('managePortfolioBtn').addEventListener('click', function() {
+                    document.getElementById('csvUpload').click();
+                });
+                
+                // Stock item click handler
+                document.addEventListener('click', function(e) {
+                    if (e.target.closest('.stock-item') && !e.target.closest('.remove-stock')) {
+                        const symbol = e.target.closest('.stock-item').querySelector('.stock-symbol').textContent;
+                        window.location.href = basePath + `/index.html#${symbol}`;
+                    }
+                    
+                    if (e.target.closest('.remove-stock')) {
+                        e.stopPropagation();
+                        const symbol = e.target.closest('.remove-stock').getAttribute('data-symbol');
+                        removeStockFromWatchlist(symbol);
+                    }
+                });
+            } catch (error) {
+                console.error('Error setting up event listeners:', error);
+            }
+        }
+
+        function saveProfilePicture() {
+            try {
+                const selectedPfp = document.querySelector('.pfp-option.selected');
+                const pfpUrl = document.getElementById('pfpUrlInput').value.trim();
+                
+                if (selectedPfp) {
+                    currentUser.profilePic = selectedPfp.querySelector('img').src;
+                } else if (pfpUrl) {
+                    try {
+                        new URL(pfpUrl);
+                        currentUser.profilePic = pfpUrl;
+                    } catch {
+                        alert('Please enter a valid image URL');
+                        return;
+                    }
+                }
+                
+                if (currentUser.profilePic) {
+                    document.getElementById('profilePic').src = currentUser.profilePic;
+                    updateUser(currentUser);
+                }
+                
+                document.getElementById('pfpModal').style.display = 'none';
+            } catch (error) {
+                console.error('Error saving profile picture:', error);
+                alert('Failed to save profile picture.');
+            }
+        }
+
+        function saveProfileChanges() {
+            try {
+                const newUsername = document.getElementById('editUsername').value.trim();
+                const newEmail = document.getElementById('editEmail').value.trim();
+                const newPassword = document.getElementById('editPassword').value;
+                
+                if (!newUsername || !newEmail) {
+                    alert('Username and email cannot be empty');
+                    return;
+                }
+                
+                currentUser.username = newUsername;
+                currentUser.email = newEmail;
+                if (newPassword) {
+                    currentUser.password = newPassword; // In production, hash the password
+                }
+                
+                updateUser(currentUser);
+                initializeUserUI(currentUser);
+                document.getElementById('editProfileModal').style.display = 'none';
+                alert('Profile updated successfully.');
+            } catch (error) {
+                console.error('Error saving profile changes:', error);
+                alert('Failed to save profile changes.');
+            }
+        }
+
+        function updateUser(updatedUser) {
+            try {
+                sessionStorage.setItem('cybertrader_currentUser', JSON.stringify(updatedUser));
+                currentUser = updatedUser;
+            } catch (error) {
+                console.error('Error updating user data:', error);
+            }
+        }
+
+        function deleteUserAccount() {
+            try {
+                sessionStorage.removeItem('cybertrader_currentUser');
+                alert('Account deleted successfully. Redirecting to login page...');
+                window.location.href = basePath + '/login.html';
+            } catch (error) {
+                console.error('Error deleting user account:', error);
+                alert('Failed to delete account.');
+            }
+        }
+
+        function loadWatchedStocks(stocks) {
+            try {
+                const watchlistContainer = document.getElementById('watchlistStocks');
+                watchlistContainer.innerHTML = '';
+                
+                if (!stocks || stocks.length === 0) {
+                    showEmptyWatchlist();
+                    return;
+                }
+                
+                stocks.forEach(stock => {
+                    const stockItem = document.createElement('div');
+                    stockItem.className = 'stock-item';
+                    stockItem.innerHTML = `
+                        <button class="remove-stock" data-symbol="${stock}" title="Remove from watchlist">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                        <div class="stock-symbol">${stock}</div>
+                        <div class="stock-name">${getStockName(stock)}</div>
+                        <div class="stock-price" id="price-${stock}">
+                            <div class="loading-spinner"></div>
+                        </div>
+                        <div class="stock-change" id="change-${stock}">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    `;
+                    watchlistContainer.appendChild(stockItem);
+                });
+                
+                addAddStockButton();
+            } catch (error) {
+                console.error('Error loading watched stocks:', error);
+            }
+        }
+
+        function showEmptyWatchlist() {
+            try {
+                const watchlistContainer = document.getElementById('watchlistStocks');
+                watchlistContainer.innerHTML = `
+                    <div class="no-stocks">
+                        <p>Your watchlist is empty</p>
+                        <button class="add-stock-header-btn" style="margin-top: 1rem;">
+                            + ADD YOUR FIRST STOCK
+                        </button>
+                    </div>
+                `;
+                
+                watchlistContainer.querySelector('.add-stock-header-btn').addEventListener('click', function() {
+                    document.getElementById('addStockModal').style.display = 'flex';
+                    document.getElementById('stockSymbol').focus();
+                });
+            } catch (error) {
+                console.error('Error showing empty watchlist:', error);
+            }
+        }
+
+        function addAddStockButton() {
+            try {
+                const watchlistContainer = document.getElementById('watchlistStocks');
+                
+                if (document.querySelector('.add-stock-btn')) return;
+                
+                const addStockBtn = document.createElement('div');
+                addStockBtn.className = 'stock-item add-stock-btn';
+                addStockBtn.innerHTML = '<div class="add-stock-icon">+</div>';
+                watchlistContainer.appendChild(addStockBtn);
+            } catch (error) {
+                console.error('Error adding stock button:', error);
+            }
+        }
+
+        function startStockUpdates(stocks) {
+            try {
+                if (stockUpdateInterval) {
+                    clearInterval(stockUpdateInterval);
+                }
+                
+                updateStockPrices(stocks);
+                stockUpdateInterval = setInterval(() => updateStockPrices(stocks), 30000);
+            } catch (error) {
+                console.error('Error starting stock updates:', error);
+            }
+        }
+
+        function updateStockPrices(stocks) {
+            try {
+                stocks.forEach(stock => {
+                    fetchStockData(stock)
+                        .then(data => {
+                            if (data) {
+                                updateStockUI(stock, data);
+                                stockDataCache[stock] = data;
+                            } else {
+                                showStockError(stock);
+                            }
+                        })
+                        .catch(error => {
+                            console.error(`Error fetching data for ${stock}:`, error);
+                            showStockError(stock);
+                        });
+                });
+            } catch (error) {
+                console.error('Error updating stock prices:', error);
+            }
+        }
+
+        function updateStockUI(stock, data) {
+            try {
+                const priceElement = document.getElementById(`price-${stock}`);
+                const changeElement = document.getElementById(`change-${stock}`);
+                
+                if (priceElement && changeElement) {
+                    priceElement.innerHTML = `$${data.price.toFixed(2)}`;
+                    const isPositive = data.change >= 0;
+                    changeElement.innerHTML = `${isPositive ? '+' : ''}${data.change.toFixed(2)}%`;
+                    changeElement.className = `stock-change ${isPositive ? 'positive' : 'negative'}`;
+                }
+            } catch (error) {
+                console.error(`Error updating UI for ${stock}:`, error);
+            }
+        }
+
+        function showStockError(stock) {
+            try {
+                const priceElement = document.getElementById(`price-${stock}`);
+                const changeElement = document.getElementById(`change-${stock}`);
+                
+                if (priceElement && changeElement) {
+                    priceElement.innerHTML = 'Error';
+                    changeElement.innerHTML = 'Error';
+                }
+            } catch (error) {
+                console.error(`Error showing stock error for ${stock}:`, error);
+            }
+        }
+
+        async function fetchStockData(symbol) {
+            try {
+                const quoteResponse = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
+                if (!quoteResponse.ok) throw new Error('Failed to fetch quote data');
+                const quoteData = await quoteResponse.json();
+                
+                const profileResponse = await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`);
+                let name = symbol;
+                let sector = 'technology';
+                if (profileResponse.ok) {
+                    const profileData = await profileResponse.json();
+                    name = profileData.name || symbol;
+                    sector = profileData.finnhubIndustry || 'technology';
+                }
+                
+                const highLowResponse = await fetch(`https://finnhub.io/api/v1/stock/metric?symbol=${symbol}&metric=price&token=${FINNHUB_API_KEY}`);
+                let high = quoteData.h;
+                let low = quoteData.l;
+                if (highLowResponse.ok) {
+                    const highLowData = await highLowResponse.json();
+                    if (highLowData.metric && highLowData.metric['52WeekHigh']) {
+                        high = highLowData.metric['52WeekHigh'];
+                    }
+                    if (highLowData.metric && highLowData.metric['52WeekLow']) {
+                        low = highLowData.metric['52WeekLow'];
+                    }
+                }
+                
+                return {
+                    symbol: symbol,
+                    price: quoteData.c,
+                    change: quoteData.dp,
+                    name: name,
+                    sector: sector,
+                    high: high,
+                    low: low
+                };
+            } catch (error) {
+                console.error(`Error fetching stock data for ${symbol}:`, error);
+                return null;
+            }
+        }
+
+        function getStockName(symbol) {
+            return stockDataCache[symbol]?.name || symbol;
+        }
+
+        function removeStockFromWatchlist(symbol) {
+            try {
+                if (confirm(`Are you sure you want to remove ${symbol} from your watchlist?`)) {
+                    currentUser.watchedStocks = currentUser.watchedStocks.filter(s => s !== symbol);
+                    updateUser(currentUser);
+                    loadWatchedStocks(currentUser.watchedStocks);
+                    
+                    if (currentUser.watchedStocks.length > 0) {
+                        startStockUpdates(currentUser.watchedStocks);
+                    } else if (stockUpdateInterval) {
+                        clearInterval(stockUpdateInterval);
+                        stockUpdateInterval = null;
+                    }
+                }
+            } catch (error) {
+                console.error('Error removing stock from watchlist:', error);
+                alert('Failed to remove stock.');
+            }
+        }
+
+        function addStockFromModal() {
+            try {
+                const symbolInput = document.getElementById('stockSymbol');
+                const errorElement = document.getElementById('stockError');
+                const symbol = symbolInput.value.trim().toUpperCase();
+                
+                if (!symbol) {
+                    errorElement.textContent = 'Please enter a stock symbol';
+                    errorElement.style.display = 'block';
+                    return;
+                }
+                
+                if (currentUser.watchedStocks && currentUser.watchedStocks.includes(symbol)) {
+                    errorElement.textContent = 'This stock is already in your watchlist';
+                    errorElement.style.display = 'block';
+                    return;
+                }
+                
+                errorElement.style.display = 'none';
+                symbolInput.disabled = true;
+                document.getElementById('confirmAddStockBtn').disabled = true;
+                document.getElementById('confirmAddStockBtn').innerHTML = '<div class="loading-spinner"></div>';
+                
+                fetchStockData(symbol)
+                    .then(data => {
+                        if (data) {
+                            currentUser.watchedStocks = currentUser.watchedStocks || [];
+                            currentUser.watchedStocks.push(symbol);
+                            updateUser(currentUser);
+                            loadWatchedStocks(currentUser.watchedStocks);
+                            startStockUpdates(currentUser.watchedStocks);
+                            document.getElementById('addStockModal').style.display = 'none';
+                            symbolInput.value = '';
+                        } else {
+                            errorElement.textContent = 'Invalid stock symbol. Please try again.';
+                            errorElement.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error verifying stock:', error);
+                        errorElement.textContent = 'Error verifying stock. Please try again.';
+                        errorElement.style.display = 'block';
+                    })
+                    .finally(() => {
+                        symbolInput.disabled = false;
+                        document.getElementById('confirmAddStockBtn').disabled = false;
+                        document.getElementById('confirmAddStockBtn').textContent = 'ADD STOCK';
+                    });
+            } catch (error) {
+                console.error('Error adding stock:', error);
+                alert('Failed to add stock.');
+            }
+        }
+
+        function processCSV(file) {
+            try {
+                if (!file) return;
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const contents = e.target.result;
+                    const lines = contents.split('\n');
+                    let totalValue = 0;
+                    let totalInvested = 0;
+                    const stockSymbols = [];
+                    let processedLines = 0;
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        if (lines[i].trim() === '') continue;
+                        
+                        const values = lines[i].split(',');
+                        const symbol = values[0]?.trim();
+                        const shares = parseFloat(values[1]);
+                        const avgPrice = parseFloat(values[2]);
+                        
+                        if (symbol && !isNaN(shares) && !isNaN(avgPrice)) {
+                            stockSymbols.push(symbol);
+                            
+                            fetchStockData(symbol)
+                                .then(data => {
+                                    if (data) {
+                                        const currentPrice = data.price;
+                                        const positionValue = shares * currentPrice;
+                                        const positionInvested = shares * avgPrice;
+                                        
+                                        totalInvested += positionInvested;
+                                        totalValue += positionValue;
+                                        processedLines++;
+                                        
+                                        if (processedLines === lines.length - 1) {
+                                            updatePortfolio(totalValue, totalInvested, stockSymbols);
+                                        }
+                                    } else {
+                                        processedLines++;
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(`Error processing stock ${symbol}:`, error);
+                                    processedLines++;
+                                });
+                        } else {
+                            processedLines++;
+                        }
+                    }
+                };
+                
+                reader.readAsText(file);
+            } catch (error) {
+                console.error('Error processing CSV:', error);
+                alert('Failed to process CSV file.');
+            }
+        }
+
+        function updatePortfolio(totalValue, totalInvested, stockSymbols) {
+            try {
+                const profit = totalValue - totalInvested;
+                const roi = totalInvested > 0 ? (profit / totalInvested) * 100 : 0;
+                
+                document.getElementById('portfolioValue').textContent = `$${totalValue.toFixed(2)}`;
+                document.getElementById('investedValue').textContent = `$${totalInvested.toFixed(2)}`;
+                document.getElementById('profitValue').textContent = `$${profit.toFixed(2)}`;
+                document.getElementById('roiValue').textContent = `${roi.toFixed(2)}%`;
+                
+                const portfolioChange = document.getElementById('portfolioChange');
+                portfolioChange.textContent = `${profit >= 0 ? '+' : ''}${profit.toFixed(2)} (${roi >= 0 ? '+' : ''}${roi.toFixed(2)}%)`;
+                portfolioChange.className = `portfolio-change ${profit >= 0 ? 'positive' : 'negative'}`;
+                
+                document.querySelector('.csv-upload').style.display = 'none';
+                document.getElementById('portfolioStats').style.display = 'block';
+                
+                currentUser.portfolio = {
+                    value: totalValue,
+                    invested: totalInvested,
+                    profit: profit,
+                    roi: roi,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                currentUser.watchedStocks = currentUser.watchedStocks || [];
+                stockSymbols.forEach(symbol => {
+                    if (!currentUser.watchedStocks.includes(symbol)) {
+                        currentUser.watchedStocks.push(symbol);
+                    }
+                });
+                
+                updateUser(currentUser);
+                loadWatchedStocks(currentUser.watchedStocks);
+                startStockUpdates(currentUser.watchedStocks);
+            } catch (error) {
+                console.error('Error updating portfolio:', error);
+                alert('Failed to update portfolio.');
+            }
+        }
+
+        function updatePortfolioDisplay() {
+            try {
+                const portfolio = currentUser.portfolio;
+                if (!portfolio) {
+                    document.getElementById('portfolioStats').style.display = 'none';
+                    document.querySelector('.csv-upload').style.display = 'block';
+                    return;
+                }
+                
+                document.getElementById('portfolioValue').textContent = `$${portfolio.value.toFixed(2)}`;
+                document.getElementById('investedValue').textContent = `$${portfolio.invested.toFixed(2)}`;
+                document.getElementById('profitValue').textContent = `$${portfolio.profit.toFixed(2)}`;
+                document.getElementById('roiValue').textContent = `${portfolio.roi.toFixed(2)}%`;
+                
+                const portfolioChange = document.getElementById('portfolioChange');
+                portfolioChange.textContent = `${portfolio.profit >= 0 ? '+' : ''}${portfolio.profit.toFixed(2)} (${portfolio.roi >= 0 ? '+' : ''}${portfolio.roi.toFixed(2)}%)`;
+                portfolioChange.className = `portfolio-change ${portfolio.profit >= 0 ? 'positive' : 'negative'}`;
+                
+                document.querySelector('.csv-upload').style.display = 'none';
+                document.getElementById('portfolioStats').style.display = 'block';
+            } catch (error) {
+                console.error('Error updating portfolio display:', error);
+            }
+        }
+    </script>
+</body>
+</html>
